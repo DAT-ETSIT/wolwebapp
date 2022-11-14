@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<head>
+    <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+        
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+        </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Nombre descriptivo</th>
+            <th>Dirección MAC</th>
+            <th>Dirección IP</th>
+            <th>Wake on LAN</th>
+        </tr>
+        {% for machine in machines: %}
+            <tr>
+                <td>{{ machine['name'] }}</td>
+                <td>{{ machine['mac'] }}</td>
+                <td>{{ machine['ip'] }}</td>
+                <td><a href="/wol/{{ machines.index(machine) }}">Despertar</a></td>
+            </tr>
+        {% endfor %}
+    </table>   
+</body>

@@ -1,0 +1,11 @@
+[Unit]
+Description=Simple Flask based web server to manage Wake on LAN
+
+[Service]
+User=root
+WorkingDirectory=/srv/wolsimpleserver
+ExecStart=python3 -m flask --app main run --host=hostname --port 80
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
