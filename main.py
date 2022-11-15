@@ -5,7 +5,8 @@ import json
 
 app = Flask(__name__)
 
-machines = []
+with open('./machines.json', 'r') as file:
+    machines = json.load(file)
 
 @app.route('/')
 def machineRoute():
@@ -18,6 +19,3 @@ def machineRoute():
 def wolMachine(machineId):
     call(['wakeonlan', '-p', machines[machineId]["port"], machines[machineId]["mac"]])
     return machineRoute()
-
-if __name__ == "__main__":
-    app.run(host="192.168.1.21", port=3000, debug=True)
