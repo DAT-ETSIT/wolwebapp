@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from subprocess import call
+from subprocess import call, run, PIPE
 from markupsafe import escape
 import json
 
@@ -35,3 +35,15 @@ def machineEdit():
 def wolMachine(machineId):
     call(['wakeonlan', '-p', machines[machineId]["port"], machines[machineId]["mac"]])
     return redirect(url_for('index'))
+
+@app.route('/ping/<int:machineId>', methods=['POST'])
+def pingMachine(machineId):
+    with open('./machines.json', 'r') as file:
+        machines = json.load(file)
+    result = run(['ping', '-c', '5' , machines[machineId]["ip"]], stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    if result.stderr != '':
+        return "ERROR"
+    if '0 received' in result.stdout:
+        #cambiar estado
+        return "Apagado"
+    return "Encendido"
