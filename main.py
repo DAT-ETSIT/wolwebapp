@@ -18,3 +18,6 @@ def machineRoute():
 def wolMachine(machineId):
     call(['wakeonlan', '-p', machines[machineId]["port"], machines[machineId]["mac"]])
     return machineRoute()
+
+if __name__ == "__main__":
+    app.run(host="192.168.1.21", port=3000, debug=True)

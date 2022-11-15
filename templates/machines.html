@@ -1,38 +1,50 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <head>
-    <style>
-        table {
-          font-family: arial, sans-serif;
-          border-collapse: collapse;
-          width: 100%;
-        }
-        
-        td, th {
-          border: 1px solid #dddddd;
-          text-align: left;
-          padding: 8px;
-        }
-        
-        tr:nth-child(even) {
-          background-color: #dddddd;
-        }
-        </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    
 </head>
 <body>
-    <table>
-        <tr>
+    
+    <div class="container">
+      <table id="equipos" class="table table-striped" style="width:100%">
+        <thead>
+          <tr>
             <th>Nombre descriptivo</th>
             <th>Dirección MAC</th>
             <th>Dirección IP</th>
             <th>Wake on LAN</th>
-        </tr>
-        {% for machine in machines: %}
-            <tr>
-                <td>{{ machine['name'] }}</td>
-                <td>{{ machine['mac'] }}</td>
-                <td>{{ machine['ip'] }}</td>
-                <td><a href="/wol/{{ machines.index(machine) }}">Despertar</a></td>
-            </tr>
-        {% endfor %}
-    </table>   
+          </tr>
+        </thead>
+        <tbody>
+          {% for machine in machines: %}
+              <tr>
+                  <td>{{ machine['name'] }}</td>
+                  <td>{{ machine['mac'] }}</td>
+                  <td>{{ machine['ip'] }}</td>
+                  <td><a href="/wol/{{ machines.index(machine) }}">Despertar</a></td>
+              </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Nombre descriptivo</th>
+            <th>Dirección MAC</th>
+            <th>Dirección IP</th>
+            <th>Wake on LAN</th>
+          </tr>
+        </tfoot>
+    </table>
+  </div>
 </body>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('#equipos').DataTable();
+});
+</script>
+
