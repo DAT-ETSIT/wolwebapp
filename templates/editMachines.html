@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+
+</head>
+
+<body>
+  <a href="{{ url_for('index')}}">Inicio</a>
+  <div class="container">
+    <form method="POST" action="/">
+      <table id="equipos" class="table table-striped" style="width:100%">
+        <thead>
+          <tr>
+            <th>Nombre descriptivo</th>
+            <th>Dirección MAC</th>
+            <th>Dirección IP</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for machine in machines: %}
+          <tr id="row_{{ machines.index(machine) }}">
+            <td><input type="text" name="machine[{{ machines.index(machine) }}][name]" value="{{ machine['name'] }}">
+            </td>
+            <td><input type="text" name="machine[{{ machines.index(machine) }}][mac]" value="{{ machine['mac'] }}"></td>
+            <td><input type="text" name="machine[{{ machines.index(machine) }}][ip]" value="{{ machine['ip'] }}"></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Nombre descriptivo</th>
+            <th>Dirección MAC</th>
+            <th>Dirección IP</th>
+          </tr>
+        </tfoot>
+      </table>
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('#equipos').DataTable();
+  });
+</script>
