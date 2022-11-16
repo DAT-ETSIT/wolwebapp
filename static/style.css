@@ -89,12 +89,21 @@ a:hover {
     width: 20px;
 
 
-    fill: #383838;
-    animation-name: spin;
-    animation-duration: 5000ms;
+    fill: #565656;
+    animation-name: ckw;
+    animation-duration: 3000ms;
     animation-iteration-count: infinite;
     animation-timing-function: linear; 
 }
+@keyframes ckw {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 thead > tr > th {
     color: #3ea6ff;
 }
