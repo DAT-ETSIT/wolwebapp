@@ -14,14 +14,14 @@ input:focus{
 }
 
 a:link, a:visited, a:active {
-    color: #337ab7;
+    color: #3ea6ff;
     background-color: transparent;
     text-decoration: none;
 }
 a:hover {
-    color: red;
+    color: #3ec2ff;
     background-color: transparent;
-    text-decoration: underline;
+    text-decoration: none;
 }
   
 
