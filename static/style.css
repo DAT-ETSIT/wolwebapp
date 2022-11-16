@@ -2,6 +2,29 @@ body{
     background-color: #1C202C;
     color: white;
 }
+input{
+    background-color: #181818;
+    color: white;
+    border-color: #383838;
+}
+input:focus{
+    background-color: #181818;
+    color: white;
+    border-color: #383838;
+}
+
+a:link, a:visited, a:active {
+    color: #337ab7;
+    background-color: transparent;
+    text-decoration: none;
+}
+a:hover {
+    color: red;
+    background-color: transparent;
+    text-decoration: underline;
+}
+  
+
 .borderTable{
     background-color: #1A1C28;
     padding-top: 15px;
@@ -45,12 +68,35 @@ body{
 .dataTables_filter > label > input :focus{
     background-color: #212121 !important;
 }
-.powerOnIcon{
+
+.powerOnIcon, .trashIcon, .plusIcon, .icono{
     width: 20px;
     fill: #3ea6ff;
 }
+.iconRed{
+    width: 20px;
+    fill: #eb1e1e;
+}
+.iconRedX{
+    width: 17px;
+    fill: #eb1e1e;
+}
+.iconGreen{
+    width: 20px;
+    fill: #47f444;
+}
+.grayIcon{
+    width: 20px;
+
+
+    fill: #383838;
+    animation-name: spin;
+    animation-duration: 5000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear; 
+}
 thead > tr > th {
-    color: #3ea6ff
+    color: #3ea6ff;
 }
 
 .form-control, .form-select{
@@ -65,4 +111,8 @@ thead > tr > th {
     height: 100%;
     background-size: cover;
     background-position: 50% 50%;
-  }
+}
+
+#btnSave{
+    background-color: #337ab7;
+}
