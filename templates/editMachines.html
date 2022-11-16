@@ -19,6 +19,7 @@
               <th>Nombre descriptivo</th>
               <th>Dirección MAC</th>
               <th>Dirección IP</th>
+              <th>Eliminar</th>
             </tr>
           </thead>
           <tbody>
@@ -33,6 +34,9 @@
               <td>
                 <input type="text" name="machine[{{ machines.index(machine) }}][ip]" value="{{ machine['ip'] }}">
               </td>
+              <td>
+                <input type="button" onclick="delMachine('{{ machines.index(machine) }}')" value="X">
+              </td>
             </tr>
             {% endfor %}
             <tr id="add">
@@ -40,6 +44,8 @@
               </td>
               <td>
                 <input type="button" onclick="addMachine()" value="+">
+              </td>
+              <td>
               </td>
               <td>
               </td>
@@ -102,5 +108,9 @@
                                   </td>
                                 </tr>
                             `);
+  }
+
+  function delMachine(id) {
+    $('#row_' + id + ' > td > input').val("")
   }
 </script>
