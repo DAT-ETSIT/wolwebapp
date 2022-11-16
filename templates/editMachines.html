@@ -8,10 +8,12 @@
 </head>
 
 <body>
-  <a href="{{ url_for('index')}}">Inicio</a>
+
   <div class="container">
+    <h4 class="text-center">Caronte</h4><br>
     <form method="POST" action="/">
-      <table id="equipos" class="table table-striped" style="width:100%">
+      <div class="borderTable align-middle">
+        <table id="equipos" class="table table-striped" style="width:100%">
           <thead>
             <tr>
               <th>Nombre descriptivo</th>
@@ -22,21 +24,33 @@
           <tbody>
             {% for machine in machines: %}
             <tr id="row_{{ machines.index(machine) }}">
-            <td><input type="text" name="machine[{{ machines.index(machine) }}][name]" value="{{ machine['name'] }}">
+              <td>
+                <input type="text" name="machine[{{ machines.index(machine) }}][name]" value="{{ machine['name'] }}">
               </td>
-            <td><input type="text" name="machine[{{ machines.index(machine) }}][mac]" value="{{ machine['mac'] }}"></td>
-            <td><input type="text" name="machine[{{ machines.index(machine) }}][ip]" value="{{ machine['ip'] }}"></td>
+              <td>
+                <input type="text" name="machine[{{ machines.index(machine) }}][mac]" value="{{ machine['mac'] }}">
+              </td>
+              <td>
+                <input type="text" name="machine[{{ machines.index(machine) }}][ip]" value="{{ machine['ip'] }}">
+              </td>
             </tr>
             {% endfor %}
-          </tbody>
-            <tr>
-            <th>Nombre descriptivo</th>
-            <th>Dirección MAC</th>
-            <th>Dirección IP</th>
+            <tr id="add">
+              <td>
+              </td>
+              <td>
+                <input type="button" onclick="addMachine()" value="+">
+              </td>
+              <td>
+              </td>
             </tr>
-        </tfoot>
+          </tbody>
         </table>
+        <a href="{{ url_for('index')}}">Inicio</a>
+        <div style="display: flex; justify-content: center">
           <button type="submit">Guardar</button>
+        </div>
+      </div>
     </form>
   </div>
 </body>
@@ -46,6 +60,47 @@
 <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
 <script>
   $(document).ready(function () {
-    $('#equipos').DataTable();
+    $('#equipos').DataTable({
+      order: [[1, 'desc']],
+      language: {
+        lengthMenu: 'Elementos por página _MENU_ ',
+        zeroRecords: 'No se encuentran resultados',
+        info: 'Página _PAGE_ de _PAGES_',
+        infoEmpty: 'No se encuentran resultados',
+        infoFiltered: '',
+        search: 'Buscar:',
+        paginate: {
+          next: ">",
+          previous: "<"
+        }
+      },
+    });
   });
+
+  function addMachine() {
+    console.log($('table > tbody > tr').length)
+    $('#add').html(`
+                    <td>
+                      <input type="text" name="machine[${$('table > tbody > tr').length - 1}][name]">
+                    </td>
+                    <td>
+                      <input type="text" name="machine[${$('table > tbody > tr').length - 1}][mac]">
+                    </td>
+                    <td>
+                      <input type="text" name="machine[${$('table > tbody > tr').length - 1}][ip]">
+                    </td>
+                  `);
+    $('tr#add').attr('id', `row_${$('table > tbody > tr').length - 1}`);
+    $('table > tbody').append(`
+                                <tr id="add">
+                                  <td>
+                                  </td>
+                                  <td>
+                                    <input type="button" onclick="addMachine()" value="+">
+                                  </td>
+                                  <td>
+                                  </td>
+                                </tr>
+                            `);
+  }
 </script>
