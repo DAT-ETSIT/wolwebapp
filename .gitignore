@@ -1,1 +1,4 @@
 machines.json
+__pycache__
+static/favicon.ico
+*.db
