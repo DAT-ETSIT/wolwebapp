@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from subprocess import call, run, PIPE
 from markupsafe import escape
 import json
 
 app = Flask(__name__)
+app.secret_key = 'ASHFLIASJF'
 
 with open('./machines.json', 'r') as file:
     machines = json.load(file)
@@ -24,11 +25,28 @@ def index():
             file.write(json.dumps(new_machines, ensure_ascii=False))
         return redirect(url_for('index'))
 
+@app.route('/login', methods = ['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        session['email'] = request.form['email']
+        if session['url']:
+            return redirect(session['url'])
+        else:
+            return redirect(url_for('index'))
+    return render_template('login.html')
+#Si has pinchado directamente el enlace de login te devuelve ahí, mirarlo
+#Ahora mismo solo comprueba que haya email jeje ^^ se puede hacer bien, mirarlo
+
+
 @app.route('/edit')
 def machineEdit():
-    with open('./machines.json', 'r') as file:
-        machines = json.load(file)
-    return render_template('editMachines.html', machines=machines)
+    if 'email' in session:
+        with open('./machines.json', 'r') as file:
+            machines = json.load(file)
+        return render_template('editMachines.html', machines=machines)
+    else:
+        session['url'] = url_for('machineEdit')
+        return redirect(url_for('login'))
 
 @app.route('/wol/<int:machineId>')
 def wolMachine(machineId):
