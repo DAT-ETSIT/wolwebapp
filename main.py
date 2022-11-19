@@ -5,6 +5,10 @@ import json
 
 app = Flask(__name__)
 
+globalConstants = {
+    "title": "Wake on LAN"
+}
+
 with open('./machines.json', 'r') as file:
     machines = json.load(file)
 
@@ -13,7 +17,7 @@ def index():
     if request.method == 'GET':
         with open('./machines.json', 'r') as file:
             machines = json.load(file)
-        return render_template('machines.html', machines=machines)
+        return render_template('machines.html', globalConstants=globalConstants, machines=machines)
     
     elif request.method == 'POST':
         new_machines = []
@@ -28,7 +32,7 @@ def index():
 def machineEdit():
     with open('./machines.json', 'r') as file:
         machines = json.load(file)
-    return render_template('editMachines.html', machines=machines)
+    return render_template('editMachines.html', globalConstants=globalConstants,  machines=machines)
 
 @app.route('/wol/<int:machineId>', methods=['POST', 'GET'])
 def wolMachine(machineId):
