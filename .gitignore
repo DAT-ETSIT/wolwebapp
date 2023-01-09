@@ -2,3 +2,6 @@ machines.json
 __pycache__
 static/favicon.ico
 *.db
+ownership.json
+users.json
+preconfig.py

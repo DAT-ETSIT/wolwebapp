@@ -1,58 +1,44 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+from flask_login import login_required, login_user, LoginManager
+
+import json
 from subprocess import call, run, PIPE
 from markupsafe import escape
-import json
+
+from database import db, init_db, db_session
+from models import User, Machine
+from auth import auth
+from views import views
+
+login_manager = LoginManager()
 
 app = Flask(__name__)
+
+init_db()
+
 app.secret_key = 'ASHFLIASJF'
+app.register_blueprint(auth)
+app.register_blueprint(views)
+login_manager.login_view = "auth.login"
+login_manager.init_app(app)
 
 globalConstants = {
     "title": "Wake on LAN"
 }
 
-with open('./machines.json', 'r') as file:
-    machines = json.load(file)
-
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'GET':
-        with open('./machines.json', 'r') as file:
-            machines = json.load(file)
-        return render_template('machines.html', globalConstants=globalConstants, machines=machines)
-    
-    elif request.method == 'POST':
-        new_machines = []
-        for i in range(0,int((len(request.form)-1)/3)):
-            if request.form[f"machine[{i}][name]"] != "" and request.form[f"machine[{i}][mac]"] != "" and request.form[f"machine[{i}][ip]"] != "":
-                new_machines.append({"name": request.form[f"machine[{i}][name]"], "mac": request.form[f"machine[{i}][mac]"], "ip": request.form[f"machine[{i}][ip]"], "port": "7"})
-        with open('./machines.json', 'w') as file:
-            file.write(json.dumps(new_machines, ensure_ascii=False))
-        return redirect(url_for('index'))
-
-@app.route('/login', methods = ['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        session['email'] = request.form['email']
-        if session['url']:
-            return redirect(session['url'])
-        else:
-            return redirect(url_for('index'))
-    return render_template('login.html')
-#Si has pinchado directamente el enlace de login te devuelve ahí, mirarlo
-#Ahora mismo solo comprueba que haya email jeje ^^ se puede hacer bien, mirarlo
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
 
 
-@app.route('/edit')
-def machineEdit():
-    if 'email' in session:
-        with open('./machines.json', 'r') as file:
-            machines = json.load(file)
-        return render_template('editMachines.html', machines=machines)
-    else:
-        session['url'] = url_for('machineEdit')
-        return redirect(url_for('login'))
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
-@app.route('/wol/<int:machineId>', methods=['POST', 'GET'])
+machines = Machine.query.all()
+
+@app.route('/wol/<int:machineId>', methods=['POST'])
+@login_required
 def wolMachine(machineId):
     if request.method != 'POST':
         return redirect(url_for('index'))
@@ -63,13 +49,12 @@ def wolMachine(machineId):
         return '<svg class="iconGreen" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>'
 
 @app.route('/ping/<int:machineId>', methods=['POST', 'GET'])
+@login_required
 def pingMachine(machineId):
     if request.method != 'POST':
         return redirect(url_for('index'))
-
-    with open('./machines.json', 'r') as file:
-        machines = json.load(file)
-    result = run(['ping', '-c', '5' , machines[machineId]["ip"]], stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    machine = Machine.query.get(int(machineId))
+    result = run(['ping', '-c', '5' , machine.ip], stdout=PIPE, stderr=PIPE, universal_newlines=True)
     if result.stderr != '':
         return '<svg class="iconRed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zm32 224c0 17.7-14.3 32-32 32s-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32z"/></svg>'
     if '0 received' in result.stdout:
