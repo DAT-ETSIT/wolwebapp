@@ -1,42 +1,179 @@
+
+:root{
+    --textColors-light: #333333;
+    --backgroundColors-light: #F3F3F3;
+    --inputBackground-light: #FFFFFF;
+    --filterBackground-light: #b6b6b6;
+    --inputBorder-light: #383838;
+    --linkColor-light: #256aa6;
+    --linkColorHover-light: #3ea6ff;
+    --clickableItemColor-light: #337AB7;
+    --btnAndPageno-light: #337AB7;
+    --navBorder-light: #FFF;
+    --navBorderHover-light: #DDD;
+    --tableBackground-light: #F6F6F6;
+    --tableShadow-light: #828282;
+    --themeBtn-light: #000000;
+    --themeBtnHover-light: #161616;
+    --themeBtnBorder-light: #337ab7;
+
+    --textColors-dark: #FFFFFF;
+    --backgroundColors-dark: #1C202C;
+    --inputBackground-dark: #181818;
+    --filterBackground-dark: #212121;
+    --inputBorder-dark: #383838;
+    --linkColor-dark: #3ea6ff;
+    --linkColorHover-dark: #3ec2ff;
+    --clickableItemColor-dark: #3ea6ff;
+    --btnAndPageno-dark: #337ab7;
+    --navBorder-dark: #383838;
+    --navBorderHover-dark: #585858;
+    --tableBackground-dark: #1A1C28;
+    --tableShadow-dark: #101218;
+    --themeBtn-dark: #FFFFFF;
+    --themeBtnHover-dark: #bebebe;
+    --themeBtnBorder-dark: #337ab7;
+}
+
+@media(prefers-color-scheme: dark){
+    :root{
+        --textColors: var(--textColors-dark);
+        --backgroundColors: var(--backgroundColors-dark);
+        --inputBackground: var(--inputBackground-dark);
+        --filterBackground: var(--filterBackground-dark);
+        --inputBorder: var(--inputBorder-dark);
+        --linkColor: var(--linkColor-dark);
+        --linkColorHover: var(--linkColorHover-dark);
+        --clickableItemColor: var(--clickableItemColor-dark);
+        --btnAndPageno: var(--btnAndPageno-dark);
+        --navBorder: var(--navBorder-dark);
+        --navBorderHover: var(--navBorderHover-dark);
+        --tableBackground: var(--tableBackground-dark);
+        --tableShadow: var(--tableShadow-dark);
+        --themeBtn: var(--themeBtn-dark);
+        --themeBtnHover: var(--themeBtnHover-dark);
+        --themeBtnBorder: var(--themeBtnBorder-dark);
+    }
+}
+
+[color-scheme="dark"] {
+    --textColors: var(--textColors-dark);
+    --backgroundColors: var(--backgroundColors-dark);
+    --inputBackground: var(--inputBackground-dark);
+    --filterBackground: var(--filterBackground-dark);
+    --inputBorder: var(--inputBorder-dark);
+    --linkColor: var(--linkColor-dark);
+    --linkColorHover: var(--linkColorHover-dark);
+    --clickableItemColor: var(--clickableItemColor-dark);
+    --btnAndPageno: var(--btnAndPageno-dark);
+    --navBorder: var(--navBorder-dark);
+    --navBorderHover: var(--navBorderHover-dark);
+    --tableBackground: var(--tableBackground-dark);
+    --tableShadow: var(--tableShadow-dark);
+    --themeBtn: var(--themeBtn-dark);
+    --themeBtnHover: var(--themeBtnHover-dark);
+    --themeBtnBorder: var(--themeBtnBorder-dark);
+}
+
+@media(prefers-color-scheme: light){
+    :root{
+        --textColors: var(--textColors-light);
+        --backgroundColors: var(--backgroundColors-light);
+        --inputBackground: var(--inputBackground-light);
+        --filterBackground: var(--filterBackground-light);
+        --inputBorder: var(--inputBorder-light);
+        --linkColor: var(--linkColor-light);
+        --linkColorHover: var(--linkColorHover-light);
+        --clickableItemColor: var(--clickableItemColor-light);
+        --btnAndPageno: var(--btnAndPageno-light);
+        --navBorder: var(--navBorder-light);
+        --navBorderHover: var(--navBorderHover-light);
+        --tableBackground: var(--tableBackground-light);
+        --tableShadow: var(--tableShadow-light);
+        --themeBtn: var(--themeBtn-light);
+        --themeBtnHover: var(--themeBtnHover-light);
+        --themeBtnBorder: var(--themeBtnBorder-light);
+    }
+}
+
+[color-scheme="light"] {
+    --textColors: var(--textColors-light);
+    --backgroundColors: var(--backgroundColors-light);
+    --inputBackground: var(--inputBackground-light);
+    --filterBackground: var(--filterBackground-light);
+    --inputBorder: var(--inputBorder-light);
+    --linkColor: var(--linkColor-light);
+    --linkColorHover: var(--linkColorHover-light);
+    --clickableItemColor: var(--clickableItemColor-light);
+    --btnAndPageno: var(--btnAndPageno-light);
+    --navBorder: var(--navBorder-light);
+    --navBorderHover: var(--navBorderHover-light);
+    --tableBackground: var(--tableBackground-light);
+    --tableShadow: var(--tableShadow-light);
+    --themeBtn: var(--themeBtn-light);
+    --themeBtnHover: var(--themeBtnHover-light);
+    --themeBtnBorder: var(--themeBtnBorder-light);
+}
+
+.theme{
+    background-color: var(--themeBtn);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 3px solid var(--themeBtnBorder);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    position: relative;
+    float: right;
+    top: 10px;
+    right: 10px;
+}
+
+.theme:is(:hover){
+    background-color: var(--themeBtnHover);
+    opacity: .8;
+}
+
 body{
-    background-color: #1C202C;
-    color: white;
+    background-color: var(--backgroundColors);
+    color: var(--textColors);
 }
 #particles-js {
-    background-color: #1C202C;
-    color: white;
+    background-color: var(--backgroundColors);
+    color: var(--textColors);
 }
 input{
-    background-color: #181818;
-    color: white;
-    border-color: #383838;
+    background-color: var(--inputBackground);
+    color: var(--textColors);
+    border-color: var(--inputBorder);
 }
 input:focus{
-    background-color: #181818;
-    color: white;
-    border-color: #383838;
+    background-color: var(--inputBackground);
+    color: var(--textColors);
+    border-color: var(--inputBorder);
 }
 
 a:link, a:visited, a:active {
-    color: #3ea6ff;
+    color: var(--linkColor);
     background-color: transparent;
     text-decoration: none;
 }
 a:hover {
-    color: #3ec2ff;
+    color: var(--linkColorHover);
     background-color: transparent;
     text-decoration: none;
 }
   
 
 .borderTable{
-    background-color: #1A1C28;
+    background-color: var(--tableBackground);
     padding-top: 15px;
     padding-bottom: 15px;
     padding-left: 2em;
     padding-right: 2em;
     border-radius: 20px;
-    box-shadow: 0px 5px 10px 0px #101218;
+    box-shadow: 0px 5px 10px 0px var(--tableShadow);
     position: relative;
 
 }
@@ -48,34 +185,34 @@ a:hover {
     padding-bottom: 10px;
 }
 .page-item .page-link {
-    background-color: #383838;
-    border-color: #383838;
-    color: #337ab7 !important;
+    background-color: var(--navBorder);
+    border-color: var(--navBorder);
+    color: var(--btnAndPageno) !important;
 }
 
 .page-item .page-link:hover {
-    background-color: #585858;
-    border-color: #585858;
-    color: white !important;
+    background-color: var(--navBorderHover);
+    border-color: var(--navBorderHover);
+    color: var(--textColors) !important;
 }
 
 .page-item.active .page-link {
-    background-color: #337ab7 !important;
-    border: 1px solid #337ab7;
-    color: white !important;
+    background-color: var(--btnAndPageno) !important;
+    border: 1px solid var(--btnAndPageno);
+    color: var(--textColors) !important;
 }
 
 .dataTables_filter > label > input{
-    background-color: #212121;
+    background-color: var(--filterBackground);
 }
 
 .dataTables_filter > label > input :focus{
-    background-color: #212121 !important;
+    background-color: var(--filterBackground) !important;
 }
 
 .powerOnIcon, .trashIcon, .plusIcon, .icono{
     width: 20px;
-    fill: #3ea6ff;
+    fill: var(--clickableItemColor);
 }
 .iconRed{
     width: 20px;
@@ -91,8 +228,6 @@ a:hover {
 }
 .grayIcon{
     width: 20px;
-
-
     fill: #565656;
     animation-name: ckw;
     animation-duration: 3000ms;
@@ -109,13 +244,13 @@ a:hover {
 }
 
 thead > tr > th {
-    color: #3ea6ff;
+    color: var(--clickableItemColor);
 }
 
 .form-control, .form-select{
-    background-color: #181818 !important;
-    color: white !important;
-    border-color: #383838;
+    background-color: var(--inputBackground) !important;
+    color: var(--textColors) !important;
+    border-color: var(--inputBorder);
 }
 
 #particles-js {
@@ -127,5 +262,5 @@ thead > tr > th {
 }
 
 #btnSave{
-    background-color: #337ab7;
+    background-color: var(--btnAndPageno);
 }

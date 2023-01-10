@@ -15,6 +15,9 @@
 </head>
 
 <body>
+
+  <button class="theme" role="switch" aria-label="Cambiar tema"></button>
+
   <div class="container" style="position: relative;">
     <h4 class="text-center">{{ globalConstants["title"] }}</h4><br>
     {% block container %}
@@ -29,4 +32,5 @@
 <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
 <script src="{{ url_for('static', filename='js/functions.js')}}"></script>
+<script src="{{ url_for('static', filename='js/theme.js')}}" type="module"></script>
 {% endblock %}
