@@ -33,7 +33,6 @@ def users():
     else:
         return redirect(url_for('views.index'))
 
-
 @views.route('/edit', methods=['GET','POST','PUT', 'DELETE'])
 @login_required
 def machineEdit():
@@ -41,13 +40,21 @@ def machineEdit():
         if request.method == 'GET':
             machines = Machine.query.all()
             return render_template('editMachines.html', machines=machines, globalConstants=globalConstants)
+
         elif request.method == 'POST':
 
             update_machine = Machine.query.get(request.json['id'])
 
-            update_machine.name = request.json['name']
-            update_machine.mac = request.json['mac']
-            update_machine.ip = request.json['ip']
+            name = request.json['name']
+            mac = request.json['mac']
+            ip = request.json['ip']
+
+            if Machine.query.filter_by(name = name, mac = mac, ip = ip).first():
+                return ""
+
+            update_machine.name = name
+            update_machine.mac = mac
+            update_machine.ip = ip
             db_session.commit()
 
             return "Guardado"
@@ -58,18 +65,29 @@ def machineEdit():
             mac = request.json['mac']
             ip = request.json['ip']
             new_machine = Machine(name, mac, ip, "7")
+            if Machine.query.filter_by(name = name, mac = mac, ip = ip).first():
+                return ""
             db_session.add(new_machine)
             db_session.commit()
 
             return "Guardado"
+
         elif request.method == 'DELETE':
-            import pdb
-            pdb.set_trace()
+
             db_session.delete(Machine.query.get(request.json['id']))
             db_session.commit()
-
-        #else:
+            
+            return "Eliminado"
             
     else:
         return redirect(url_for('views.index'))
 
+@views.route('/getMachine', methods=['POST'])
+@login_required
+def getMachine():
+    if request.method == 'POST':
+        machine = Machine.query.filter_by(name = request.json['name'], mac = request.json['mac'], ip = request.json['ip']).first()
+        if machine:
+            return str(machine.id)
+        else:
+            return "Error"
