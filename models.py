@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, UniqueConstraint
 from werkzeug.security import generate_password_hash
 from flask_login import UserMixin
 from database import Base
@@ -7,8 +7,8 @@ from database import Base
 class User(UserMixin, Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True) # primary keys are required by SQLAlchemy
-    username = Column(String(100), unique=True)
-    email = Column(String(100))
+    username = Column(String(100),  unique=True)
+    email = Column(String(100), unique=True)
     password = Column((String(100)))
     admin = Column(Boolean, default=False)
 
@@ -18,19 +18,25 @@ class User(UserMixin, Base):
         self.password = generate_password_hash(password)
     
     def __repr__(self):
-        machine_json = {"id": self.id, "username": self.username, "email": self.email, "password": self.password, "admin": self.admin}
-        return str(machine_json)
+        user_json = {"id": self.id, "username": self.username, "email": self.email, "password": self.password, "admin": self.admin}
+        return str(user_json)
 
     def setAdmin(self,admin):
         self.admin = admin
 
 class Machine(Base):
     __tablename__ = 'machines'
+
     id = Column(Integer, primary_key=True) # primary keys are required by SQLAlchemy
-    name = Column(String(100), unique=True)
+    name = Column(String(100))
     mac = Column(String(100))
     ip = Column(String(100))
     port = Column(String(100))
+
+    __table_args__ = (
+        UniqueConstraint('name', 'mac', 'ip', name='uq_machines_name_mac_ip'),
+    )
+   
 
     def __init__(self, name, mac, ip, port):
         self.name = name
