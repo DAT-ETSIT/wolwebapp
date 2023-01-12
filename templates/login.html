@@ -1,10 +1,48 @@
-{% extends "layout.html" %}
-{% block container %}
-<form action = "" method = "post">
-    <table>  
-        <tr><td>Email</td><td><input type = 'email' name = 'email'></td></tr>  
-        <tr><td>Password</td><td><input type = 'password' name = 'password'></td></tr>  
-        <tr><td><input type = "submit" value = "Submit"></td></tr>  
-    </table>  
-</form>
+{% extends "layout.html" %} {% block container %}
+
+<div class="d-flex justify-content-center align-items-center">
+	<form action="" method="post">
+		<div class="borderTable p-5 rounded-5 text-secondary shadow" style="width: 25rem">
+
+			<div class="text-center fs-1 fw-bold">Login</div>
+			<div class="input-group mt-4">
+				<div class="input-group-text">
+					<svg width="15px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0S96 57.3 96 128s57.3 128 128 128zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></svg>
+				</div>
+				<input
+					class="form-control bg-light"
+					type="email"
+					name="email"
+					placeholder="Email"
+				/>
+			</div>
+			<div class="input-group mt-1">
+				<div class="input-group-text">
+					<svg width="15px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"/></svg>
+				</div>
+				<input
+					class="form-control bg-light"
+					type="password"
+					name="password"
+					placeholder="Contraseña"
+				/>
+			</div>
+			<div class="d-flex justify-content-around mt-1">
+				<div class="d-flex align-items-center gap-1">
+					<input class="form-check-input" type="checkbox" />
+					<div class="pt-1" style="font-size: 0.9rem">Recordar</div>
+				</div>
+				<div class="pt-1">
+					<a
+						href="#"
+						class="text-decoration-none text-info fw-semibold fst-italic"
+						style="font-size: 0.9rem"
+						>¿Has olvidado tu contraseña?</a
+					>
+				</div>
+			</div>
+			<input type="submit" class="btn text-white w-100 mt-4 fw-semibold shadow-sm"></input>
+		</div>
+	</form>
+</div>
 {% endblock %}

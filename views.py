@@ -8,7 +8,8 @@ from database import db_session
 views = Blueprint('views', __name__)
 
 globalConstants = {
-    "title": "Wake on LAN"
+    "title": "Wake on LAN",
+    "user": current_user
 }
 
 @views.route('/', methods=['GET'])

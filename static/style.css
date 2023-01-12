@@ -1,5 +1,9 @@
 
 :root{
+
+    --navTextColors: #FFF;
+
+
     --textColors-light: #333333;
     --backgroundColors-light: #F3F3F3;
     --inputBackground-light: #FFFFFF;
@@ -124,10 +128,11 @@
     cursor: pointer;
     display: grid;
     place-items: center;
-    position: relative;
+    position: fixed;
     float: right;
     top: 10px;
     right: 10px;
+    transition: background 0.5s ease, color 0.5s ease;
 }
 
 .theme:is(:hover){
@@ -135,9 +140,13 @@
     opacity: .8;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 body{
     background-color: var(--backgroundColors);
     color: var(--textColors);
+    transition: background 0.5s ease, color 0.5s ease;
+    font-family: 'Roboto', sans-serif; 
 }
 #particles-js {
     background-color: var(--backgroundColors);
@@ -197,9 +206,10 @@ a:hover {
 }
 
 .page-item.active .page-link {
+    transition: background 0.5s ease, color 0.5s ease;
     background-color: var(--btnAndPageno) !important;
     border: 1px solid var(--btnAndPageno);
-    color: var(--textColors) !important;
+    color: var(--navTextColors) !important;
 }
 
 .dataTables_filter > label > input{
@@ -211,6 +221,11 @@ a:hover {
 }
 
 .powerOnIcon, .trashIcon, .plusIcon, .icono{
+    width: 20px;
+    fill: var(--clickableItemColor);
+}
+
+.saveIcon{
     width: 20px;
     fill: var(--clickableItemColor);
 }
@@ -263,4 +278,19 @@ thead > tr > th {
 
 #btnSave{
     background-color: var(--btnAndPageno);
+}
+
+.btn{
+    background-color: var(--btnAndPageno) !important;
+}
+
+.table{
+    transition: background 0.5s ease, color 0.5s ease;
+}
+
+.logoutLink {
+    position: relative;
+    float: right;
+    top: 25px;
+    right: 10px;
 }
