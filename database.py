@@ -1,9 +1,13 @@
+import os
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 db = SQLAlchemy()
+
+if not os.path.exists('./data'):
+    os.mkdir('./data')
 
 engine = create_engine('sqlite:///data/WakeOnLan.db')
 db_session = scoped_session(sessionmaker(autocommit=False,

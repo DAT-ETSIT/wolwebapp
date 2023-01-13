@@ -6,3 +6,7 @@ ownership.json
 users.json
 preconfig.py
 data/
+config.py
+build
+dist
+wolsimpleserver.egg-info
