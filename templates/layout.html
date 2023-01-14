@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
     <script>
       let root = document.querySelector(':root')
-      let theme = localStorage.getItem('wol.theme') || 'dark';
+      let theme = localStorage.getItem('wol.theme') || 'light';
       root.setAttribute('color-scheme', `${theme}`);
     </script>
     <title>{{ globalConstants["title"] }}</title>

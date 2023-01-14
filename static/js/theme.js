@@ -1,9 +1,7 @@
-import '../style.css' assert { type: 'css' };
-
 const themeBtn = document.querySelector('.theme');
 
 const getCurrentTheme = () => {
-    let theme = window.matchMedia('(prefers-color-scheme: dark')
+    let theme = window.matchMedia('(prefers-color-scheme: light')
     .matches ? 'dark' : 'light';
     localStorage.getItem('wol.theme') ? theme =
     localStorage.getItem('wol.theme') : null;
