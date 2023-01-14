@@ -2,3 +2,4 @@ Flask>=2.2
 SQLAlchemy
 Flask-SQLAlchemy
 flask_login
+waitress

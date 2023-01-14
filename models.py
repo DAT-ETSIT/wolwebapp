@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, UniqueConstraint
 from werkzeug.security import generate_password_hash
 from flask_login import UserMixin
+
 from database import Base
 
 

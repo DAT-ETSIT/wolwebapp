@@ -1,8 +1,0 @@
-[
-    {
-        "name": "<Nombre descriptivo de la máquina>",
-        "mac": "<Dirección MAC en formato 00:00:00:00:00:00>",
-        "ip": "<Dirección IP>",
-        "port": "<Puerto en el que se escuchan los Magic Packets>"
-    }
-]
