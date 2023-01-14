@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from flask_login import login_required, current_user
 import json
+import random
+import string
 
 from models import User, Machine, Ownership
 from database import db_session
@@ -8,9 +10,14 @@ from database import db_session
 views = Blueprint('views', __name__)
 
 globalConstants = {
-    "title": "Wake on LAN",
-    "user": current_user
+    "title": "Wake on LAN"
 }
+
+def randomPass():
+    password = ""
+    for i in range(6):
+        password += random.choice(string.ascii_letters)
+    return password
 
 @views.route('/', methods=['GET'])
 @login_required
@@ -24,16 +31,93 @@ def index():
                 machines.append(Machine.query.get(machine.machine_id))
         return render_template('machines.html', globalConstants=globalConstants, machines=machines)
 
-@views.route('/users', methods=['GET', 'POST'])
+@views.route('/users', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
 def users():
     if current_user.admin:
-        users = User.query.all()
-        return render_template('users.html', users=users, globalConstants=globalConstants)
+        
+        # Recupera los datos de todos los usuarios.
+        if request.method == "GET":
+
+            users = User.query.all()
+            return render_template('users.html', users=users, globalConstants=globalConstants)
+
+        # Actualiza los datos del usuario especificado.
+        elif request.method == 'POST':
+            user = User.query.filter_by(id=request.json['id']).first()
+            if user:
+                try:
+                    user.admin = True if request.json['admin'] == 0 else False
+                    db_session.commit()
+                    isAdmin = '1' if user.admin else '0'
+                    response = {
+                        'code': 0,
+                        'isAdmin': isAdmin
+                    }
+                except:
+                    response = {
+                        'code': 2,
+                        'message': "Error al cambiar los permisos del usuario."
+                    }
+            else:
+                response = {
+                        'code': 1,
+                        'message': "El usuario especificado no existe."
+                    }
+
+            return response
+
+        # Guarda el nuevo usuario especificado en la base de datos.
+        elif request.method == 'PUT':
+
+            email = request.json['email']
+            password = randomPass()
+            newUser = User(email, password)
+            try:
+                db_session.add(newUser)
+                db_session.commit()
+                user = User.query.filter_by(email=request.json['email']).first()
+                response = {
+                    'code': 0,
+                    'id': user.id
+                }
+            except:
+                response = {
+                    'code': 1,
+                    'message': "Error al guardar el usuario en la base de datos."
+                }
+            finally:
+                return response
+
+        # Elimina el usuario especificado.
+        elif request.method == 'DELETE':
+            user = User.query.filter_by(id=request.json['id']).first()
+            if user:
+                try:
+                    db_session.delete(user)
+                    db_session.commit()
+                    response = {
+                        'code': 0,
+                        'id': request.json['id']
+                    }
+                except:
+                    response = {
+                        'code': 2,
+                        'message': "Error al buscar el usuario en la base de datos."
+                    }
+            else:
+                response = {
+                        'code': 1,
+                        'message': "El usuario especificado no existe."
+                    }
+
+            return response
+
     else:
         return redirect(url_for('views.index'))
 
-@views.route('/edit', methods=['GET','POST','PUT', 'DELETE'])
+
+@views.route('/edit', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
 def machineEdit():
     if current_user.admin:
