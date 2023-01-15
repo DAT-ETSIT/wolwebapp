@@ -10,6 +10,7 @@ from database import db, init_db, db_session
 from models import User, Machine
 from auth import auth
 from views import views
+import data.serverConfig as config
 
 login_manager = LoginManager()
 
@@ -28,20 +29,16 @@ if users == []:
         print("Deben especificarse las credenciales del administrador inicial mediante las variables de entorno ADMIN_MAIL y ADMIN_PASS.")
         exit(1)
 
-app.secret_key = 'ASHFLIASJF'
+app.secret_key = config.SECRET
 app.register_blueprint(auth)
 app.register_blueprint(views)
 login_manager.login_view = "auth.login"
 login_manager.init_app(app)
 
-globalConstants = {
-    "title": "Wake on LAN"
-}
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db_session.remove()
-
 
 @login_manager.user_loader
 def load_user(user_id):

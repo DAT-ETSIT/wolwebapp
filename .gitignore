@@ -1,9 +1,7 @@
-machines.json
 __pycache__
 *.db
-ownership.json
-users.json
-preconfig.py
-data/
-config.py
+*.json
 *.pem
+preconfig.py
+mailConfig.py
+serverConfig.py

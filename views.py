@@ -6,12 +6,10 @@ import string
 
 from models import User, Machine, Ownership
 from database import db_session
+import mail.mail as mail
+import data.serverConfig as config
 
 views = Blueprint('views', __name__)
-
-globalConstants = {
-    "title": "Wake on LAN"
-}
 
 def randomPass():
     password = ""
@@ -29,7 +27,7 @@ def index():
             owner = Ownership.query.filter_by(user_id = current_user.id).all()
             for machine in owner:
                 machines.append(Machine.query.get(machine.machine_id))
-        return render_template('machines.html', globalConstants=globalConstants, machines=machines)
+        return render_template('machines.html', TITLE=config.TITLE, machines=machines)
 
 @views.route('/users', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
@@ -40,7 +38,7 @@ def users():
         if request.method == "GET":
 
             users = User.query.all()
-            return render_template('users.html', users=users, globalConstants=globalConstants)
+            return render_template('users.html', users=users, TITLE=config.TITLE)
 
         # Actualiza los datos del usuario especificado.
         elif request.method == 'POST':
@@ -77,17 +75,24 @@ def users():
                 db_session.add(newUser)
                 db_session.commit()
                 user = User.query.filter_by(email=request.json['email']).first()
-                response = {
-                    'code': 0,
-                    'id': user.id
+                mailResult = mail.sendMail(email, f"Nuevas credenciales en {config.SERVER_NAME}", mail.buildMessage('newUser', {'$PASSWORD': password, '$ADMIN_EMAIL': config.ADMIN_EMAIL}))
+                print(f"mailResult: {mailResult}")
+                if mailResult == 0:
+                    response = {
+                        'code': 0,
+                        'id': user.id
+                    }
+                elif mailResult == 1:
+                    response = {
+                    'code': 2,
+                    'message': "No se han configurado las credenciales para enviar mensajes de correo."
                 }
             except:
                 response = {
                     'code': 1,
                     'message': "Error al guardar el usuario en la base de datos."
                 }
-            finally:
-                return response
+            return response
 
         # Elimina el usuario especificado.
         elif request.method == 'DELETE':
@@ -126,7 +131,7 @@ def owners(user_id):
             owned_machines = []
             for machine in ownerships:
                 owned_machines.append(machine.id)
-            return render_template('ownership.html', machines=machines, owned_machines=owned_machines, globalConstants=globalConstants)
+            return render_template('ownership.html', machines=machines, owned_machines=owned_machines, TITLE=config.TITLE)
 
         if request.method == 'DELETE':
             try:
@@ -168,7 +173,7 @@ def machineEdit():
     if current_user.admin:
         if request.method == 'GET':
             machines = Machine.query.all()
-            return render_template('editMachines.html', machines=machines, globalConstants=globalConstants)
+            return render_template('editMachines.html', machines=machines, TITLE=config.TITLE)
 
         elif request.method == 'POST':
 

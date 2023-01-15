@@ -16,14 +16,14 @@
       let theme = localStorage.getItem('wol.theme') || 'light';
       root.setAttribute('color-scheme', `${theme}`);
     </script>
-    <title>{{ globalConstants["title"] }}</title>
+    <title>{{ TITLE }}</title>
     {% endblock %}
   </head>
 
   <body>
     <button class="theme" role="switch" aria-label="Cambiar tema"></button>
     <div class="container" style="position: relative;">
-      <h2 class="text-center">{{ globalConstants["title"] }}</h2><br>
+      <h2 class="text-center">{{ TITLE }}</h2><br>
       {% block container %}
           {% block table_content %}
           {% endblock %}
