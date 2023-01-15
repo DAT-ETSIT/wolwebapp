@@ -2,6 +2,7 @@ from flask import Blueprint, request, redirect, url_for, abort
 from flask_login import login_required, current_user
 import random
 import string
+import re
 
 from models import User, Machine, Ownership
 from database import db_session
@@ -24,45 +25,72 @@ def machines():
     if current_user.admin:
         if request.method == 'PUT':
 
-            name = request.json['name']
-            mac = request.json['mac']
-            ip = request.json['ip']
-            port = request.json['port']
+            ipRegex = r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$'
+            macRegex = r'(?:[0-9a-fA-F]){12}'
+            macFullRegex = r'(?:[0-9a-fA-F]:?){12}'
+            portRegex = r'^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$'
 
+            name = request.json['name'].strip()
+            mac = request.json['mac'].strip()
+            ip = request.json['ip'].strip()
+            port = request.json['port'].strip()
 
-            if Machine.query.filter_by(name = name, mac = mac, ip = ip, port = port).first():
-                response = {
-                    'code': 1,
-                    'message': "Ya existe una máquina con los mismos datos."
-                }
+            if (re.fullmatch(macRegex, mac)):
+                mac = list(mac)
+                mac.insert(10 ,':')
+                mac.insert(8 ,':')
+                mac.insert(6 ,':')
+                mac.insert(4 ,':')
+                mac.insert(2 ,':')
+                mac = ''.join(mac)
+
+            if (re.fullmatch(macFullRegex, mac)):
+                if (re.fullmatch(ipRegex, ip)):
+                    if (re.fullmatch(portRegex, port)):
+                        if Machine.query.filter_by(name = name, mac = mac, ip = ip, port = port).first():
+                            response = {
+                                'code': 1,
+                                'message': "Ya existe una máquina con los mismos datos."
+                            }
+
+                        else:
+                            try:
+                                new_machine = Machine(name, mac, ip, port)
+                                db_session.add(new_machine)
+                                db_session.commit()
+
+                                machine = Machine.query.filter_by(name = name, mac = mac, ip = ip, port = port).first()
+                                response = {
+                                    'code': 0,
+                                    'id': machine.id
+                                }
+
+                            except:
+                                response = {
+                                    'code': 2,
+                                    'message': "Error al añadir la máquina a la base de datos."
+                                }
+
+                    else:
+                        response = {
+                            'code': 5,
+                            'message': "El puerto introducido no tiene un formato válido."
+                        }
+
+                else:
+                    response = {
+                        'code': 4,
+                        'message': "La dirección IP introducida no tiene un formato válido."
+                    }
 
             else:
-                try:
-                    new_machine = Machine(name, mac, ip, port)
-                    db_session.add(new_machine)
-                    db_session.commit()
-
-                    machine = Machine.query.filter_by(name = name, mac = mac, ip = ip, port = port).first()
-                    response = {
-                        'code': 0,
-                        'id': machine.id
-                    }
-
-                except:
-                    response = {
-                        'code': 2,
-                        'message': "Error al añadir la máquina a la base de datos."
-                    }
+                response = {
+                    'code': 3,
+                    'message': "La dirección MAC introducida no tiene un formato válido."
+                }
 
             return response
-
-        #elif request.method == 'POST':
-        #    machine = Machine.query.filter_by(name = request.json['name'], mac = request.json['mac'], ip = request.json['ip']).first()
-        #    if machine:
-        #        return str(machine.id)
-        #    else:
-        #        return "Error"
-            
+          
     else:
         abort(403)
 
@@ -145,43 +173,51 @@ def users():
 
         # Guarda el nuevo usuario especificado en la base de datos.
         if request.method == 'PUT':
+            regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+            email = request.json['email'].strip()
 
-            email = request.json['email']
-
-            if User.query.filter_by(email=request.json['email']).first():
-                response = {
-                    'code': 3,
-                    'message': "Ya existe un usuario con ese email."
-                }
-
-                return response
-
-            password = randomPass()
-            newUser = User(email, password)
-            try:
-                db_session.add(newUser)
-                db_session.commit()
-                user = User.query.filter_by(email=request.json['email']).first()
-                mailResult = mail.sendMail(email, f"Nuevas credenciales en {config.SERVER_NAME}", mail.buildMessage('newUser', {'$PASSWORD': password, '$ADMIN_EMAIL': config.ADMIN_EMAIL}))
-                if mailResult == 0:
+            if (re.fullmatch(regex, email)):
+                if User.query.filter_by(email=request.json['email']).first():
                     response = {
-                        'code': 0,
-                        'id': user.id
+                        'code': 3,
+                        'message': "Ya existe un usuario con ese email."
                     }
-                elif mailResult == 1:
-                    response = {
-                    'code': 2,
-                    'message': "No se han configurado las credenciales para enviar mensajes de correo."
-                }
-            except:
+
+                else:
+                    password = randomPass()
+                    newUser = User(email, password)
+                    try:
+                        db_session.add(newUser)
+                        db_session.commit()
+                        user = User.query.filter_by(email=request.json['email']).first()
+                        mailResult = mail.sendMail(email, f"Nuevas credenciales en {config.SERVER_NAME}", mail.buildMessage('newUser', {'$PASSWORD': password, '$ADMIN_EMAIL': config.ADMIN_EMAIL}))
+                        if mailResult == 0:
+                            response = {
+                                'code': 0,
+                                'id': user.id
+                            }
+                        elif mailResult == 1:
+                            response = {
+                            'code': 2,
+                            'message': "No se han configurado las credenciales para enviar mensajes de correo."
+                        }
+                    except:
+                        response = {
+                            'code': 1,
+                            'message': "Error al guardar el usuario en la base de datos."
+                        }
+
+            else: 
                 response = {
-                    'code': 1,
-                    'message': "Error al guardar el usuario en la base de datos."
+                    'code': 4,
+                    'message': "No se ha especificado un email válido."
                 }
+
+
             return response
 
     else:
-        return redirect(url_for('routes.index'))
+        abort(403)
 
 
 @routes.route('/users/<int:userId>', methods=['PATCH', 'POST', 'DELETE'])
