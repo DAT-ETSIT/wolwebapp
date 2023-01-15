@@ -41,7 +41,7 @@ def users():
         if request.method == "GET":
 
             users = User.query.all()
-            return render_template('users.html', users=users, TITLE=config.TITLE, isAdmin=current_user.admin)
+            return render_template('users.html', users=users, TITLE=config.TITLE, isAdmin=current_user.admin, currentUserId=current_user.id)
 
     else:
         abort(403)

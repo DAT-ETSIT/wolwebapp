@@ -79,7 +79,8 @@ function saveUser(buttonClicked){
   })
 }
 
-function editUser(buttonClicked, isAdmin){
+function editUser(buttonClicked, isAdmin, confirmation=false){
+    if (confirmation) if (!confirm("¿Deseas retirar los permisos de este usuario?")) return
     checkbox = buttonClicked.parent().parent()
     row = buttonClicked.parent().parent().parent()
     id = row[0].id
@@ -124,7 +125,8 @@ function cancelUser(buttonClicked){
   row.html('')
 }
 
-function delUser(buttonClicked){
+function delUser(buttonClicked, confirmation=false){
+  if (confirmation) if (!confirm("¿Deseas borrar este usuario?")) return
   row = buttonClicked.parent().parent()
   id = row[0].id
   $.ajax({
