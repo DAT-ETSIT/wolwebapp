@@ -1,15 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for, session
-from flask_login import login_required, login_user, LoginManager
+from flask import Flask, request, redirect, url_for
+from flask_login import login_required, LoginManager
 
-import json
 import os
-from subprocess import call, run, PIPE
-from markupsafe import escape
+from subprocess import run, PIPE
 
-from database import db, init_db, db_session
+from database import init_db, db_session
 from models import User, Machine
 from auth import auth
 from views import views
+from routes import routes
 import data.serverConfig as config
 
 login_manager = LoginManager()
@@ -32,6 +31,7 @@ if users == []:
 app.secret_key = config.SECRET
 app.register_blueprint(auth)
 app.register_blueprint(views)
+app.register_blueprint(routes)
 login_manager.login_view = "auth.login"
 login_manager.init_app(app)
 
@@ -44,20 +44,20 @@ def shutdown_session(exception=None):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-machines = Machine.query.all()
 
 @app.route('/wol/<int:machineId>', methods=['POST'])
 @login_required
 def wolMachine(machineId):
     if request.method != 'POST':
         return redirect(url_for('index'))
-    result = run(['wakeonlan', '-p', machines[machineId]["port"], machines[machineId]["mac"]], stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    machine = Machine.query.get(machineId)
+    result = run(['wakeonlan', '-p', machine.port, machine.mac], stdout=PIPE, stderr=PIPE, universal_newlines=True)
     if result.stderr != '':
         return '<svg class="iconRed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zm32 224c0 17.7-14.3 32-32 32s-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32z"/></svg>'
     else:
         return '<svg class="iconGreen" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>'
 
-@app.route('/ping/<int:machineId>', methods=['POST', 'GET'])
+@app.route('/ping/<int:machineId>', methods=['POST'])
 @login_required
 def pingMachine(machineId):
     if request.method != 'POST':

@@ -65,7 +65,7 @@ function saveUser(buttonClicked){
               <a class="pass" onclick="restorePass()">RESTAURAR CONTRASEÑA</a>
             </td>
             <td class="text-center">
-            <a href="#" onclick=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></a>
+            <a href="/users/{{ user['id'] }}/machines"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></a>
             <a href="#" onclick="delUser($(this))"><svg class="trashIcon"
                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                   <path
@@ -82,11 +82,12 @@ function saveUser(buttonClicked){
 function editUser(buttonClicked, isAdmin){
     checkbox = buttonClicked.parent().parent()
     row = buttonClicked.parent().parent().parent()
+    id = row[0].id
     $.ajax({
         method: 'POST',
-        url: '/users',
+        url: '/users/' + id,
         contentType: 'application/json',
-        data: JSON.stringify({'id': row[0].id, 'admin': isAdmin}),
+        data: JSON.stringify({'id': id, 'admin': isAdmin}),
         beforeSend: function () {
           buttonClicked.html('<svg class="grayIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg>')
         }
@@ -110,11 +111,11 @@ function cancelUser(buttonClicked){
 
 function delUser(buttonClicked){
   row = buttonClicked.parent().parent()
+  id = row[0].id
   $.ajax({
     method: 'DELETE',
-    url: '/users',
+    url: '/users/' + id,
     contentType: 'application/json',
-    data: JSON.stringify({'id': row[0].id}),
     beforeSend: function () {
       buttonClicked.html('<svg class="grayIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg>')
     }

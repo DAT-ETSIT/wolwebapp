@@ -24,13 +24,22 @@
     <button class="theme" role="switch" aria-label="Cambiar tema"></button>
     <div class="container" style="position: relative;">
       <h2 class="text-center">{{ TITLE }}</h2><br>
+      {% if isAdmin %}
+        {% block admin_menu %}
+          <a href="{{ url_for('views.index')}}">Inicio</a>
+          <a href="{{ url_for('views.machines')}}">Máquinas</a>
+          <a href="{{ url_for('views.users')}}">Usuarios</a>
+        {% endblock %}
+      {% endif %}
       {% block container %}
           {% block table_content %}
           {% endblock %}
       {% endblock %}
 
-      {% block userinfo %} {% endblock %}
-      </div>
+      {% block user_info %}
+        <a class="logoutLink" href="/logout">Cerrar Sesión</a> 
+      {% endblock %}
+    </div>
       
   </body>
 

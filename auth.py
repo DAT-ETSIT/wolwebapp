@@ -1,20 +1,18 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, session
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 
 from database import db_session
 from models import User
+import data.serverConfig as config
 
 auth = Blueprint('auth', __name__)
-
-globalConstants = {
-    "title": "Wake on LAN"
-}
 
 ### Los "flash" sirven para poner mensajitos por pantalla, yo no los usaría porque no me gusta como queda.
 ### Se puede mirar si queda bien con CSS o si se pone un alert o algo parecido
 
 ### Falta por añadir administrador/usuario y ownership
+
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -32,7 +30,7 @@ def login():
         else:
             flash('Email does not exist.', category='error')
 
-    return render_template("./login.html", user=current_user, globalConstants=globalConstants)
+    return render_template("./login.html", user=current_user, TITLE=config.TITLE)
 
 
 @auth.route('/logout')

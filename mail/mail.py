@@ -9,8 +9,6 @@ except:
     print("No se ha definido un fichero de configuración para el envío de correo.")
 
 def sendMail(to, subject, message):
-    import pdb
-    pdb.set_trace()
     try:
         config
     except:
