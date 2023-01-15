@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, UniqueConstraint
+from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash
 from flask_login import UserMixin
 
 from database import Base
-
 
 class User(UserMixin, Base):
     __tablename__ = 'users'
@@ -12,6 +12,8 @@ class User(UserMixin, Base):
     password = Column((String(100)))
     admin = Column(Boolean, default=False)
     activated = Column(Boolean, default=False)
+
+    owns = relationship("Ownership", cascade="all, delete")
 
     def __init__(self, email, password):
         self.email = email
@@ -33,11 +35,12 @@ class Machine(Base):
     ip = Column(String(100))
     port = Column(String(100))
 
+    owned = relationship("Ownership", cascade="all, delete")
+
     __table_args__ = (
         UniqueConstraint('name', 'mac', 'ip', name='uq_machines_name_mac_ip'),
     )
    
-
     def __init__(self, name, mac, ip, port):
         self.name = name
         self.mac = mac
@@ -52,8 +55,8 @@ class Machine(Base):
 class Ownership(Base):
     __tablename__ = 'ownership'
     id = Column(Integer, primary_key=True)
-    machine_id = Column("machine_id", Integer, ForeignKey("machines.id"), nullable=False)
-    user_id = Column("user_id", Integer, ForeignKey("users.id"), nullable=False)
+    machine_id = Column("machine_id", Integer, ForeignKey("machines.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column("user_id", Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
 
     __table_args__ = (
         UniqueConstraint('machine_id', 'user_id', name='uq_owner_machine_user'),
