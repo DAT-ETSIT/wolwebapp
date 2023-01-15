@@ -163,7 +163,6 @@ def users():
                 db_session.commit()
                 user = User.query.filter_by(email=request.json['email']).first()
                 mailResult = mail.sendMail(email, f"Nuevas credenciales en {config.SERVER_NAME}", mail.buildMessage('newUser', {'$PASSWORD': password, '$ADMIN_EMAIL': config.ADMIN_EMAIL}))
-                print(f"mailResult: {mailResult}")
                 if mailResult == 0:
                     response = {
                         'code': 0,
@@ -185,17 +184,50 @@ def users():
         return redirect(url_for('routes.index'))
 
 
-@routes.route('/users/<int:userId>', methods=['POST', 'DELETE'])
+@routes.route('/users/<int:userId>', methods=['PATCH', 'POST', 'DELETE'])
 @login_required
 def user(userId):
     if current_user.admin:
 
-        # Actualiza los datos del usuario especificado.
-        if request.method == 'POST':
+        # Resetea la contraseña del usuario especificado.
+        if request.method == 'PATCH':
             user = User.query.filter_by(id=userId).first()
             if user:
                 try:
-                    user.admin = True if request.json['admin'] == 0 else False
+                    password = randomPass()
+                    user.password = password
+                    db_session.commit()
+
+                    mailResult = mail.sendMail(user.email, f"Reestablecimiento de contraseña en {config.SERVER_NAME}", mail.buildMessage('resetPassword', {'$PASSWORD': password, '$ADMIN_EMAIL': config.ADMIN_EMAIL}))
+                    if mailResult == 0:
+                        response = {
+                            'code': 0
+                        }
+                    elif mailResult == 1:
+                        response = {
+                            'code': 3,
+                            'message': "No se han configurado las credenciales para enviar mensajes de correo."
+                        }
+
+                except:
+                    response = {
+                        'code': 2,
+                        'message': "Error al resetear la contraseña del usuario."
+                    }
+            else:
+                response = {
+                        'code': 1,
+                        'message': "El usuario especificado no existe."
+                    }
+
+            return response
+
+        # Actualiza los datos del usuario especificado.
+        elif request.method == 'POST':
+            user = User.query.filter_by(id=userId).first()
+            if user:
+                try:
+                    user.password = True if request.json['admin'] == 0 else False
                     db_session.commit()
                     isAdmin = '1' if user.admin else '0'
                     response = {
@@ -214,6 +246,7 @@ def user(userId):
                     }
 
             return response
+
         
         # Elimina el usuario especificado.
         elif request.method == 'DELETE':
