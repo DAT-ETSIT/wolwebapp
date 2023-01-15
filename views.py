@@ -182,13 +182,13 @@ def machineEdit():
             name = request.json['name']
             mac = request.json['mac']
             ip = request.json['ip']
-
-            if Machine.query.filter_by(name = name, mac = mac, ip = ip).first():
+            port = request.json['port']
+            if Machine.query.filter_by(name = name, mac = mac, ip = ip, port=port).first():
                 return ""
-
             update_machine.name = name
             update_machine.mac = mac
             update_machine.ip = ip
+            update_machine.port = port
             db_session.commit()
 
             return "Guardado"
@@ -198,8 +198,9 @@ def machineEdit():
             name = request.json['name']
             mac = request.json['mac']
             ip = request.json['ip']
-            new_machine = Machine(name, mac, ip, "7")
-            if Machine.query.filter_by(name = name, mac = mac, ip = ip).first():
+            port = request.json['port']
+            new_machine = Machine(name, mac, ip, port)
+            if Machine.query.filter_by(name = name, mac = mac, ip = ip, port=port).first():
                 return ""
             db_session.add(new_machine)
             db_session.commit()
