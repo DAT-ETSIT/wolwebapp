@@ -116,6 +116,51 @@ def users():
     else:
         return redirect(url_for('views.index'))
 
+@views.route('/users/<int:user_id>', methods=['GET','PUT', 'DELETE'])
+@login_required
+def owners(user_id):
+    if current_user.admin:
+        if request.method == 'GET':
+            machines = Machine.query.all()
+            ownerships = Ownership.query.filter_by(user_id=user_id).all()
+            owned_machines = []
+            for machine in ownerships:
+                owned_machines.append(machine.id)
+            return render_template('ownership.html', machines=machines, owned_machines=owned_machines, globalConstants=globalConstants)
+
+        if request.method == 'DELETE':
+            try:
+                edit_ownership = Ownership.query.filter_by(user_id = user_id, machine_id=request.json["machine_id"]).first()
+                if edit_ownership:
+                    db_session.delete(edit_ownership)
+                db_session.commit()
+                response = {
+                    'code': 0,
+                    'isOwned': 0
+                }
+            except:
+                response = {
+                    'code': 1,
+                    'message': f"Error eliminando la propiedad de la máquina {request.json['machine_id']}."
+                }
+            return response
+
+        if request.method == 'PUT':
+            try:
+                edit_ownership = Ownership(user_id=user_id, machine_id=request.json["machine_id"])
+                print(edit_ownership)
+                db_session.add(edit_ownership)
+                db_session.commit()
+                response = {
+                    'code': 0,
+                    'isOwned': 1
+                }
+            except:
+                response = {
+                    'code': 1,
+                    'message': "Error añadiendo propiedad a la máquina {request.json['machine_id']}."
+                }
+            return response
 
 @views.route('/edit', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required

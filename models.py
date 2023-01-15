@@ -55,6 +55,10 @@ class Ownership(Base):
     machine_id = Column("machine_id", Integer, ForeignKey("machines.id"), nullable=False)
     user_id = Column("user_id", Integer, ForeignKey("users.id"), nullable=False)
 
+    __table_args__ = (
+        UniqueConstraint('machine_id', 'user_id', name='uq_owner_machine_user'),
+    )
+
     def __init__(self, machine_id, user_id):
         self.machine_id = machine_id
         self.user_id = user_id
