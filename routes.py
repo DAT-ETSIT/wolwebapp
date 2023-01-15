@@ -28,20 +28,40 @@ def machines():
             mac = request.json['mac']
             ip = request.json['ip']
             port = request.json['port']
-            new_machine = Machine(name, mac, ip, "7")
+
+
             if Machine.query.filter_by(name = name, mac = mac, ip = ip, port = port).first():
-                return ""
-            db_session.add(new_machine)
-            db_session.commit()
+                response = {
+                    'code': 1,
+                    'message': "Ya existe una máquina con los mismos datos."
+                }
 
-            return "Guardado"
-
-        elif request.method == 'POST':
-            machine = Machine.query.filter_by(name = request.json['name'], mac = request.json['mac'], ip = request.json['ip']).first()
-            if machine:
-                return str(machine.id)
             else:
-                return "Error"
+                try:
+                    new_machine = Machine(name, mac, ip, port)
+                    db_session.add(new_machine)
+                    db_session.commit()
+
+                    machine = Machine.query.filter_by(name = name, mac = mac, ip = ip, port = port).first()
+                    response = {
+                        'code': 0,
+                        'id': machine.id
+                    }
+
+                except:
+                    response = {
+                        'code': 2,
+                        'message': "Error al añadir la máquina a la base de datos."
+                    }
+
+            return response
+
+        #elif request.method == 'POST':
+        #    machine = Machine.query.filter_by(name = request.json['name'], mac = request.json['mac'], ip = request.json['ip']).first()
+        #    if machine:
+        #        return str(machine.id)
+        #    else:
+        #        return "Error"
             
     else:
         abort(403)
@@ -59,23 +79,61 @@ def machine(machineId):
             ip = request.json['ip']
             port = request.json['port']
 
-            if Machine.query.filter_by(name = name, mac = mac, ip = ip, port = port).first():
-                return ""
+            if Machine.query.filter_by(id=machineId).first():
+                if not Machine.query.filter_by(name = name, mac = mac, ip = ip, port = port).first():
+                    try:
+                        update_machine.name = name
+                        update_machine.mac = mac
+                        update_machine.ip = ip
+                        update_machine.port = port
+                        db_session.commit()
 
-            update_machine.name = name
-            update_machine.mac = mac
-            update_machine.ip = ip
-            update_machine.port = port
-            db_session.commit()
+                        response = {
+                            'code': 0
+                        }
 
-            return "Guardado"
+                    except:
+                        response = {
+                            'code': 1,
+                            'message': "Error al actualizar la máquina en la base de datos."
+                        }
+
+                else:
+                    response = {
+                        'code': 2,
+                        'message': "Ya existe una máquina con los mismos datos."
+                    }
+            
+            else:
+                response = {
+                    'code': 3,
+                    'message': "La máquina especificada no existe."
+                }
+
+            return response
         
         elif request.method == 'DELETE':
+            if Machine.query.filter_by(id=machineId).first():
+                try:
+                    db_session.delete(Machine.query.get(machineId))
+                    db_session.commit()
+                    response = {
+                            'code': 0
+                    }
 
-            db_session.delete(Machine.query.get(machineId))
-            db_session.commit()
+                except:
+                    response = {
+                        'code': 1,
+                        'message': "Error al eliminar la máquina de la base de datos."
+                    }
+
+            else:
+                response = {
+                    'code': 2,
+                    'message': "La máquina especificada no existe."
+                }
             
-            return "Eliminado"
+            return response
     else:
         abort(403)
         
@@ -89,6 +147,15 @@ def users():
         if request.method == 'PUT':
 
             email = request.json['email']
+
+            if User.query.filter_by(email=request.json['email']).first():
+                response = {
+                    'code': 3,
+                    'message': "Ya existe un usuario con ese email."
+                }
+
+                return response
+
             password = randomPass()
             newUser = User(email, password)
             try:
@@ -116,6 +183,7 @@ def users():
 
     else:
         return redirect(url_for('routes.index'))
+
 
 @routes.route('/users/<int:userId>', methods=['POST', 'DELETE'])
 @login_required
@@ -215,5 +283,3 @@ def user_machines(userId):
 
     else:
         abort(403)
-
-
