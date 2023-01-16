@@ -18,14 +18,12 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password, password):
-                flash('Logged in successfully!', category='success')
-                print(remember)
                 login_user(user, remember=remember)
                 return redirect(url_for('views.index'))
             else:
-                flash('Incorrect password, try again.', category='error')
+                flash('Contraseña incorrecta.', category='error')
         else:
-            flash('Email does not exist.', category='error')
+            flash('El email especificado no está registrado.', category='error')
 
     return render_template("./login.html", user=current_user, TITLE=config.TITLE)
 

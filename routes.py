@@ -39,8 +39,12 @@ def password():
         user.activated = True
         db_session.commit()
 
-        mailResult = mail.sendMail(user.email, f"Se ha actualizado tu contraseña en {config.SERVER_NAME}", mail.buildMessage('updatedPassword', {'$ADMIN_EMAIL': config.ADMIN_EMAIL}))
-        return redirect(url_for('views.index'))
+        try:
+            mail.sendMail(user.email, f"Se ha actualizado tu contraseña en {config.SERVER_NAME}", mail.buildMessage('updatedPassword', {'$ADMIN_EMAIL': config.ADMIN_EMAIL}))
+        except:
+            print("Error al enviar el email de confirmación de activación de la cuenta.")
+        finally:
+            return redirect(url_for('views.index'))
 
     except:
         return render_template('changePassword.html', error="Ha ocurrido un error.")
@@ -346,7 +350,6 @@ def user_machines(userId):
         if request.method == 'PUT':
             try:
                 new_ownership = Ownership(user_id=userId, machine_id=request.json["machine_id"])
-                print(new_ownership)
                 db_session.add(new_ownership)
                 db_session.commit()
                 response = {

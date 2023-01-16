@@ -20,13 +20,19 @@ init_db()
 
 users = User.query.all()
 if users == []:
-    if os.environ.get('ADMIN_MAIL') != None and os.environ.get('ADMIN_PASS') != None:
-        newUser = User(email=os.environ.get('ADMIN_MAIL'), password=os.environ.get('ADMIN_PASS'))
-        newUser.admin = True
-        db_session.add(newUser)
-        db_session.commit()
+    if os.environ.get('ENV') != None and os.environ.get('ENV') == "development":
+        if os.environ.get('ADMIN_MAIL') != None and os.environ.get('ADMIN_PASS') != None:
+            newUser = User(email=os.environ.get('ADMIN_MAIL'), password=os.environ.get('ADMIN_PASS'))
+            newUser.admin = True
+            newUser.activated = True
+            db_session.add(newUser)
+            db_session.commit()
+            exit(0)
+        else:
+            print("Deben especificarse las credenciales del administrador inicial mediante las variables de entorno ADMIN_MAIL y ADMIN_PASS.")
+            exit(1)
     else:
-        print("Deben especificarse las credenciales del administrador inicial mediante las variables de entorno ADMIN_MAIL y ADMIN_PASS.")
+        print("La aplicación debe iniciarse con ENV='development' y las credenciales del primer administrador especificadas en ADMIN_MAIL y ADMIN_PASS.")
         exit(1)
 
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(hours=1)
@@ -36,6 +42,7 @@ app.register_blueprint(views)
 app.register_blueprint(routes)
 
 login_manager.login_view = "auth.login"
+login_manager.login_message = None
 login_manager.init_app(app)
 
 

@@ -1,7 +1,13 @@
 __pycache__
+bin
+include
+lib
+lib64
+pyvenv.cfg
 *.db
 *.json
 *.pem
 preconfig.py
-mailConfig.py
+secrets.py
 serverConfig.py
+install.sh
