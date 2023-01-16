@@ -36,7 +36,7 @@ fi
 
 echo "Comprobando las dependencias necesarias."
 apt update
-for check in git ethtool python3 python3-pip openssl
+for check in git ethtool python3 python3-pip pyhton3-venv openssl
     do
         result=`dpkg-query -s $check 2>&1`
         if [[ "$result" == *"is not installed"* ]]; then
@@ -46,7 +46,7 @@ for check in git ethtool python3 python3-pip openssl
 
 mkdir -p $PARENT_PATH
 cd $PARENT_PATH
-git clone git@github.com:Pablofl01/wolsimpleserver.git
+git clone https://github.com/Pablofl01/wolsimpleserver
 cd $WORKING_PATH
 
 if [[ $CERT_PATH == '' ]] || [[ $KEY_PATH == '' ]]; then
