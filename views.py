@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, abort
 from flask_login import login_required, current_user
 
-
 from models import User, Machine, Ownership
 import data.serverConfig as config
 
@@ -12,13 +11,15 @@ views = Blueprint('views', __name__)
 @login_required
 def index():
     if request.method == 'GET':
-        print("GET")
-        machines = []
-        if hasattr(current_user, 'admin'):
-            owner = Ownership.query.filter_by(user_id = current_user.id).all()
-            for machine in owner:
-                machines.append(Machine.query.get(machine.machine_id))
-        return render_template('index.html', TITLE=config.TITLE, machines=machines, isAdmin=current_user.admin)
+        if current_user.activated:
+            machines = []
+            if hasattr(current_user, 'admin'):
+                owner = Ownership.query.filter_by(user_id = current_user.id).all()
+                for machine in owner:
+                    machines.append(Machine.query.get(machine.machine_id))
+            return render_template('index.html', TITLE=config.TITLE, machines=machines, isAdmin=current_user.admin)
+        else:
+            return render_template('changePassword.html')
 
 
 @views.route('/machines', methods=['GET'])

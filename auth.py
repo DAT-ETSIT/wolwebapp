@@ -8,22 +8,19 @@ import data.serverConfig as config
 
 auth = Blueprint('auth', __name__)
 
-### Los "flash" sirven para poner mensajitos por pantalla, yo no los usaría porque no me gusta como queda.
-### Se puede mirar si queda bien con CSS o si se pone un alert o algo parecido
-
-### Falta por añadir administrador/usuario y ownership
-
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+        remember = request.form.get('remember') if request.form.get('remember') else False
         user = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password, password):
                 flash('Logged in successfully!', category='success')
-                login_user(user, remember=True)
+                print(remember)
+                login_user(user, remember=remember)
                 return redirect(url_for('views.index'))
             else:
                 flash('Incorrect password, try again.', category='error')

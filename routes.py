@@ -1,5 +1,6 @@
-from flask import Blueprint, request, redirect, url_for, abort
+from flask import Blueprint, request, abort, redirect, url_for, render_template, flash
 from flask_login import login_required, current_user
+from werkzeug.security import check_password_hash
 import random
 import string
 import re
@@ -17,6 +18,32 @@ def randomPass():
     for i in range(6):
         password += random.choice(string.ascii_letters)
     return password
+
+
+@routes.route('/password', methods=['POST'])
+@login_required
+def password():
+    user = current_user
+    password = request.form.get('password')
+
+    if (password != request.form.get('confirmPassword')):
+        flash("Las contraseñas no coinciden.")
+        return render_template('changePassword.html')
+    
+    if (check_password_hash(user.password, password)):
+        flash("No puedes utilizar la misma contraseña de nuevo.")
+        return render_template('changePassword.html')
+
+    try:
+        user.password = password
+        user.activated = True
+        db_session.commit()
+
+        mailResult = mail.sendMail(user.email, f"Se ha actualizado tu contraseña en {config.SERVER_NAME}", mail.buildMessage('updatedPassword', {'$ADMIN_EMAIL': config.ADMIN_EMAIL}))
+        return redirect(url_for('views.index'))
+
+    except:
+        return render_template('changePassword.html', error="Ha ocurrido un error.")
 
 
 @routes.route('/machines', methods=['POST', 'PUT'])
@@ -190,7 +217,7 @@ def users():
                         db_session.add(newUser)
                         db_session.commit()
                         user = User.query.filter_by(email=request.json['email']).first()
-                        mailResult = mail.sendMail(email, f"Nuevas credenciales en {config.SERVER_NAME}", mail.buildMessage('newUser', {'$PASSWORD': password, '$ADMIN_EMAIL': config.ADMIN_EMAIL}))
+                        mailResult = mail.sendMail(email, f"Nuevas credenciales en {config.SERVER_NAME}", mail.buildMessage('newUser', {'$PASSWORD': password, '$ADMIN_EMAIL': config.ADMIN_MAIL}))
                         if mailResult == 0:
                             response = {
                                 'code': 0,
@@ -263,7 +290,7 @@ def user(userId):
             user = User.query.filter_by(id=userId).first()
             if user:
                 try:
-                    user.password = True if request.json['admin'] == 0 else False
+                    user.admin = True if request.json['admin'] == 0 else False
                     db_session.commit()
                     isAdmin = '1' if user.admin else '0'
                     response = {
