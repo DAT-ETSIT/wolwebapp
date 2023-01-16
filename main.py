@@ -32,7 +32,7 @@ if users == []:
             print("Deben especificarse las credenciales del administrador inicial mediante las variables de entorno ADMIN_MAIL y ADMIN_PASS.")
             exit(1)
     else:
-        print("La aplicación debe iniciarse con ENV='development' y las credenciales del primer administrador especificadas en ADMIN_MAIL y ADMIN_PASS.")
+        print("La aplicación debe iniciarse por primera vez con ENV='development' y las credenciales del primer administrador especificadas en ADMIN_MAIL y ADMIN_PASS.")
         exit(1)
 
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(hours=1)

@@ -3,8 +3,8 @@ Description=Simple Flask based web server to manage Wake on LAN
 
 [Service]
 User=root
-WorkingDirectory=path
-ExecStart=python3 -m flask --app main run --host=hostname --port portNumber
+WorkingDirectory=<WORKING_PATH>
+ExecStart= <WORKING_PATH>/bin/gunicorn --certfile <CERT_PATH> --keyfile <KEY_PATH> --bind <BIND_ADDRESS>:<PORT> wsgi:app
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=always

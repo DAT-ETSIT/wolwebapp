@@ -30,7 +30,7 @@ def sendMail(to, subject, message):
     server = smtplib.SMTP(f'{config.MAIL_SERVER}:{config.MAIL_PORT}')
     server.starttls()
     try:
-        server.login(config.MAIL_USER, config.MAIL_PASS)
+        server.login(secrets.MAIL_USER, secrets.MAIL_PASS)
     except:
         print("Error al iniciar sesión en el servidor.")
         return 3
