@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "$EUID" -ne 0 ] 
+    then echo "Para poder realizar la configuración, debes ejecutar este script como root."
+	exit
+fi
+
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 read -r -p "Introduce la cuenta de correo electrónico desde la que se enviarán los mensajes: " MAIL_USER
