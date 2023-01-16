@@ -8,7 +8,7 @@ import data.serverConfig as config
 views = Blueprint('views', __name__)
 
 def canUpdate():
-    run('git fetch', shell=True, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    run('git fetch', shell=True)
     result = run('git status --branch --porcelain | grep -o behind', shell=True, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     return result.stdout.replace('\n','')
 
