@@ -36,7 +36,7 @@ fi
 
 echo "Comprobando las dependencias necesarias."
 apt update
-for check in git ethtool python3 python3-pip python3-venv openssl
+for check in git ethtool python3 python3-pip python3-venv openssl wakeonlan
     do
         result=`dpkg-query -s $check 2>&1`
         if [[ "$result" == "dpkg-query"* ]]; then
