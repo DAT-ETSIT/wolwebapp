@@ -15,8 +15,8 @@ routes = Blueprint('routes', __name__)
 
 def randomPass():
     password = ""
-    for i in range(6):
-        password += random.choice(string.ascii_letters)
+    for i in range(15):
+        password += random.choice(string.hexdigits)
     return password
 
 
