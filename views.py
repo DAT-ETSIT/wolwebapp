@@ -1,11 +1,17 @@
 from flask import Blueprint, render_template, request, abort
 from flask_login import login_required, current_user
+from subprocess import run, PIPE
 
 from models import User, Machine, Ownership
 import data.serverConfig as config
 
 views = Blueprint('views', __name__)
 
+def canUpdate():
+    # a = run(['git status'], shell=True, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    # print(a)
+    result = run('git status --branch --porcelain | grep -o behind', shell=True, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    return result.stdout.replace('\n','')
 
 @views.route('/', methods=['GET'])
 @login_required
@@ -17,7 +23,7 @@ def index():
                 owner = Ownership.query.filter_by(user_id = current_user.id).all()
                 for machine in owner:
                     machines.append(Machine.query.get(machine.machine_id))
-            return render_template('index.html', TITLE=config.TITLE, machines=machines, isAdmin=current_user.admin)
+            return render_template('index.html', TITLE=config.TITLE, machines=machines, isAdmin=current_user.admin, canUpdate=canUpdate())
         else:
             return render_template('changePassword.html')
 

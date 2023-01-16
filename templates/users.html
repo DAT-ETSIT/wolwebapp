@@ -20,7 +20,7 @@
         </td>
         <td class="text-center">
           <div class="form-check form-switch d-flex justify-content-center">
-            <input class="form-check-input isAdmin" type="checkbox" {{"checked" if user['admin'] else ""}} onclick="editUser($(this), {{ 1 if user['admin'] else 0 }} {% if user['id'] == currentUserId %}, true{% endif %})">
+            <input class="form-check-input isAdmin" type="checkbox" {{"checked" if user['admin'] else ""}} onclick="editUser($(this), {{ 1 if user['admin'] else 0 }} {% if user['id'] == currentUserId %}, true {% else %}, false{% endif %})">
           </div>
         </td>
         <td class="text-center">

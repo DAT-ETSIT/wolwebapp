@@ -37,6 +37,13 @@
     <h1>NO HAY MAQUINAS</h1>
   {% endif %}
 </div>
+
+{% if isAdmin and canUpdate=="behind" %}
+  <div>
+    Hay una <a href="https://github.com/Pablofl01/wolsimpleserver">nueva versión</a> de la aplicación disponible
+  </div>
+{% endif %}
+
 {% endblock %}
 
 {% block user_info %}

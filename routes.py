@@ -228,6 +228,9 @@ def users():
                                 'id': user.id
                             }
                         elif mailResult == 1:
+                            if user:
+                                db_session.delete(user)
+                                db_session.commit()
                             response = {
                             'code': 2,
                             'message': "No se han configurado las credenciales para enviar mensajes de correo."
