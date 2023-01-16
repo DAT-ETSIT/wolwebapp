@@ -94,7 +94,7 @@ function editUser(buttonClicked, isAdmin, confirmation=false){
         }
       }).done(function (response) {
         if (response['code'] == 0) {
-          checkbox.html(`<div class="form-check form-switch d-flex justify-content-center"><input type="checkbox" class=" form-check-input isAdmin" ` + ((response['isAdmin'] == 1) ? "checked" : "") + ` onclick="editUser($(this), ` + response['isAdmin'] + `)"/></div>`)         
+          checkbox.html(`<div class="form-check form-switch d-flex justify-content-center"><input type="checkbox" class=" form-check-input isAdmin" ` + ((response['isAdmin'] == 1) ? "checked" : "") + ` onclick="editUser($(this), ` + response['isAdmin'] + `, ` +((response['isAdmin'] == 1) ? true : false) + `)"/></div>`)         
         } else {
           alert(response['message'])
         }
