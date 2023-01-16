@@ -39,7 +39,7 @@ apt update
 for check in git ethtool python3 python3-pip python3-venv openssl
     do
         result=`dpkg-query -s $check 2>&1`
-        if [[ "$result" == *"is not installed"* ]]; then
+        if [[ "$result" == "dpkg-query"* ]]; then
             apt-get -y install $check
         fi
     done
