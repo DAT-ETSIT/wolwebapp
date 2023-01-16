@@ -7,6 +7,8 @@ pyvenv.cfg
 *.db
 *.json
 *.pem
+*.so
+*.c
 preconfig.py
 secrets.py
 serverConfig.py

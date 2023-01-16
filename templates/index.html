@@ -38,12 +38,7 @@
   {% endif %}
 </div>
 
-{% if isAdmin and canUpdate=="behind" %}
-  <div>
-    Hay una <a href="https://github.com/Pablofl01/wolsimpleserver">nueva versión</a> de la aplicación disponible
-  </div>
-{% endif %}
-
+  <div id="updateAlert"></div>
 {% endblock %}
 
 {% block user_info %}
@@ -52,4 +47,8 @@
 
 {% block scripts %}
   {{ super() }}
+  {% if isAdmin %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/adminFunctions.js')}}"></script>
+    <script type="text/javascript">$(document).ready(checkUpdates('{{ currentVersion }}'))</script>
+  {% endif %}
 {% endblock %}
