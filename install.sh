@@ -16,12 +16,12 @@ while getopts ":p:b:w:c:k: h" opt
 do
     case $opt in
         h)  echo "Mostrar ayuda" ;;
-        b)  $BIND_ADDRESS=$OPTARG   ;;
-        p)  $PORT=$OPTARG  ;;
-        w)  $PARENT_PATH=${OPTARG%'/'}
-            $WORKING_PATH="$PARENT_PATH/wolsimpleserver"  ;;
-        c)  $CERT_PATH=$OPTARG  ;;
-        k)  $KEY_PATH=$OPTARG  ;;
+        b)  BIND_ADDRESS=$OPTARG   ;;
+        p)  PORT=$OPTARG  ;;
+        w)  PARENT_PATH=${OPTARG%'/'}
+            WORKING_PATH="$PARENT_PATH/wolsimpleserver"  ;;
+        c)  CERT_PATH=$OPTARG  ;;
+        k)  KEY_PATH=$OPTARG  ;;
         \?) echo "Opción no válida -$OPTARG." 
             exit 1  ;;
         :)  echo "La opción -$OPTARG require un argumento."
@@ -51,11 +51,9 @@ cd $WORKING_PATH
 
 if [[ $CERT_PATH == '' ]] || [[ $KEY_PATH == '' ]]; then
     openssl req -x509 -newkey rsa:4096 -nodes -out $WORKING_PATH/data/cert.pem -keyout $WORKING_PATH/data/key.pem
-    $CERT_PATH="$WORKING_PATH/data/cert.pem"
-    $KEY_PATH="$WORKING_PATH/data/key.pem"
+    CERT_PATH="$WORKING_PATH/data/cert.pem"
+    KEY_PATH="$WORKING_PATH/data/key.pem"
 fi
-
-# path="$(pwd -P | sed -r 's/\//\\\//g')"
 
 echo "Crenado entorno virutal de pyhton."
 python3 -m venv /srv/wolsimpleserver
