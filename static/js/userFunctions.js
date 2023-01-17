@@ -83,7 +83,6 @@ function editUser(buttonClicked, isAdmin, confirmation=false){
     if (confirmation) if (!confirm("¿Deseas retirar los permisos de este usuario?")) {
       checkbox = buttonClicked.parent().parent()
       checkbox.html(`<div class="form-check form-switch d-flex justify-content-center"><input type="checkbox" class=" form-check-input isAdmin" ` + "checked" + ` onclick="editUser($(this), ` + 1 + `, ` +((1 == 1) ? true : false) + `)"/></div>`)
-      //window.location.reload();
       return
     }
     checkbox = buttonClicked.parent().parent()

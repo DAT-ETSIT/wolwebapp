@@ -6,16 +6,16 @@
   <table id="equipos" class="table table-striped table-hover" style="width:100%">
     <thead>
       <tr>
-        <th class="text-center">Email</th>
-        <th class="text-center">isAdmin</th>
-        <th class="text-center">Recuperar Contraseña</th>
-        <th class="text-center">Administrar</th>
+        <th>Email</th>
+        <th class="text-center">&nbsp;&nbsp;&nbsp;isAdmin</th>
+        <th class="text-center">&nbsp;&nbsp;&nbsp;Recuperar Contraseña</th>
+        <th class="text-center">&nbsp;&nbsp;&nbsp;Administrar</th>
       </tr>
     </thead>
     <tbody>
       {% for user in users: %}
       <tr id="{{ user['id'] }}">
-        <td class="text-center">
+        <td>
           <p class="email">{{ user['email'] }}</p>
         </td>
         <td class="text-center">

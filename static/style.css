@@ -294,3 +294,16 @@ thead > tr > th {
     top: 25px;
     right: 10px;
 }
+
+.alert{
+    margin-right: 14%;
+    margin-left: 8%;
+    margin-top: 50px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
+
+#theTitle{
+    font-family: 'Questrial', sans-serif;
+    font-weight: 200;
+}
