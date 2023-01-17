@@ -10,7 +10,7 @@ update() {
         systemctl restart wolsimpleserver.service
     else
         echo "Se ha cancelado la operación"
-        exit()
+        exit
     fi
 }
 
