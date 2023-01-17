@@ -4,6 +4,7 @@ from werkzeug.security import check_password_hash
 import random
 import string
 import re
+import os
 
 from models import User, Machine, Ownership
 from database import db_session
@@ -16,7 +17,7 @@ routes = Blueprint('routes', __name__)
 def randomPass():
     password = ""
     for i in range(15):
-        password += random.choice(string.hexdigits)
+        password += random.choice(string.ascii_letters + string.digits)
     return password
 
 
@@ -30,9 +31,10 @@ def password():
         flash("Las contraseñas no coinciden.")
         return render_template('changePassword.html')
     
-    if (check_password_hash(user.password, password)):
-        flash("No puedes utilizar la misma contraseña de nuevo.")
-        return render_template('changePassword.html')
+    if os.environ.get('ENV') != "development":
+        if (check_password_hash(user.password, password)):
+            flash("No puedes utilizar la misma contraseña de nuevo.")
+            return render_template('changePassword.html')
 
     try:
         user.password = password
@@ -75,50 +77,68 @@ def machines():
                 mac.insert(2 ,':')
                 mac = ''.join(mac)
 
-            if (re.fullmatch(macFullRegex, mac)):
-                if (re.fullmatch(ipRegex, ip)):
-                    if (re.fullmatch(portRegex, port)):
-                        if Machine.query.filter_by(name = name, mac = mac, ip = ip, port = port).first():
-                            response = {
-                                'code': 1,
-                                'message': "Ya existe una máquina con los mismos datos."
-                            }
+            if os.environ.get('ENV') != "development":
+                if (re.fullmatch(macFullRegex, mac)):
+                    if (re.fullmatch(ipRegex, ip)):
+                        if (re.fullmatch(portRegex, port)):
+                            if Machine.query.filter_by(name = name, mac = mac, ip = ip, port = port).first():
+                                response = {
+                                    'code': 1,
+                                    'message': "Ya existe una máquina con los mismos datos."
+                                }
+
+                            else:
+                                try:
+                                    new_machine = Machine(name, mac, ip, port)
+                                    db_session.add(new_machine)
+                                    db_session.commit()
+
+                                    machine = Machine.query.filter_by(name = name, mac = mac, ip = ip, port = port).first()
+                                    response = {
+                                        'code': 0,
+                                        'id': machine.id
+                                    }
+
+                                except:
+                                    response = {
+                                        'code': 2,
+                                        'message': "Error al añadir la máquina a la base de datos."
+                                    }
 
                         else:
-                            try:
-                                new_machine = Machine(name, mac, ip, port)
-                                db_session.add(new_machine)
-                                db_session.commit()
-
-                                machine = Machine.query.filter_by(name = name, mac = mac, ip = ip, port = port).first()
-                                response = {
-                                    'code': 0,
-                                    'id': machine.id
-                                }
-
-                            except:
-                                response = {
-                                    'code': 2,
-                                    'message': "Error al añadir la máquina a la base de datos."
-                                }
+                            response = {
+                                'code': 5,
+                                'message': "El puerto introducido no tiene un formato válido."
+                            }
 
                     else:
                         response = {
-                            'code': 5,
-                            'message': "El puerto introducido no tiene un formato válido."
+                            'code': 4,
+                            'message': "La dirección IP introducida no tiene un formato válido."
                         }
 
                 else:
                     response = {
-                        'code': 4,
-                        'message': "La dirección IP introducida no tiene un formato válido."
+                        'code': 3,
+                        'message': "La dirección MAC introducida no tiene un formato válido."
                     }
 
             else:
-                response = {
-                    'code': 3,
-                    'message': "La dirección MAC introducida no tiene un formato válido."
-                }
+                try:
+                    new_machine = Machine(name, mac, ip, port)
+                    db_session.add(new_machine)
+                    db_session.commit()
+                    machine = Machine.query.filter_by(name = name, mac = mac, ip = ip, port = port).first()
+                    response = {
+                        'code': 0,
+                        'id': machine.id
+                    }
+
+                except:
+                    response = {
+                        'code': 2,
+                        'message': "Error al añadir la máquina a la base de datos."
+                    }
 
             return response
           
