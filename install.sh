@@ -55,7 +55,8 @@ if [[ $CERT_PATH == '' ]] || [[ $KEY_PATH == '' ]]; then
     KEY_PATH="$WORKING_PATH/data/key.pem"
 fi
 
-echo "Crenado entorno virutal de pyhton."
+echo
+echo "Creando entorno virutal de pyhton."
 python3 -m venv /srv/wolsimpleserver
 
 echo "Instalando librerías."
