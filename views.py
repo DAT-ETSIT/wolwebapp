@@ -58,10 +58,10 @@ def user_machines(user_id):
         if request.method == 'GET':
             machines = Machine.query.all()
             ownerships = Ownership.query.filter_by(user_id=user_id).all()
+            user_email = User.query.get(user_id).email
             owned_machines = []
             for machine in ownerships:
                 owned_machines.append(machine.id)
-            return render_template('ownership.html', machines=machines, owned_machines=owned_machines, TITLE=config.TITLE, isAdmin=current_user.admin)
-
+            return render_template('ownership.html', user_email=user_email, machines=machines, owned_machines=owned_machines, TITLE=config.TITLE, isAdmin=current_user.admin)
     else:
         abort(403)
