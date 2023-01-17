@@ -16,7 +16,9 @@
         <tr id="{{machine['id']}}">
           <td>{{ machine['name'] }}</td>
           <td class="text-center">
-            <input type="checkbox" class="isOwned" {{"checked" if machine['id'] in owned_machines else ""}} onclick="editOwner($(this), {{ 1 if machine['id'] in owned_machines else 0 }})" >{{ 1 if machine['id'] in owned_machines else 0 }}
+            <div class="form-check form-switch d-flex justify-content-center">
+              <input class="form-check-input isOwned" type="checkbox" class="isOwned" {{"checked" if machine['id'] in owned_machines else ""}} onclick="editOwner($(this), {{ 1 if machine['id'] in owned_machines else 0 }})" >
+            </div>
           </td>
         </tr>
         {% endfor %}
