@@ -87,7 +87,7 @@ echo "Configurando envío de mensajes por correo electrónico."
 chmod +x $WORKING_PATH/configure_email.sh
 $WORKING_PATH/configure_email.sh
 
-ENV='development' ADMIN_MAIL=$ADMIN_MAIL ADMIN_PASS=$ADMIN_PASS $WORKING_PATH/bin/python3 $WORKING_PATH/wsgi.py
+ENV='firstrun' ADMIN_MAIL=$ADMIN_MAIL ADMIN_PASS=$ADMIN_PASS $WORKING_PATH/bin/python3 $WORKING_PATH/wsgi.py
 
 echo
 echo "Configurando servicio."

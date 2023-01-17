@@ -18,22 +18,28 @@ app = Flask(__name__)
 
 init_db()
 
-users = User.query.all()
-if users == []:
-    if os.environ.get('ENV') != None and os.environ.get('ENV') == "development":
+def insertUser(mail, password, isAdmin=False, activated=False):
+    newUser = User(email=mail, password=password)
+    newUser.admin = isAdmin
+    newUser.activated = activated
+    db_session.add(newUser)
+    db_session.commit()
+
+users = User.query.all()    
+if os.environ.get('ENV') != None and os.environ.get('ENV') == "firstrun":
+    if users == []:
         if os.environ.get('ADMIN_MAIL') != None and os.environ.get('ADMIN_PASS') != None:
-            newUser = User(email=os.environ.get('ADMIN_MAIL'), password=os.environ.get('ADMIN_PASS'))
-            newUser.admin = True
-            newUser.activated = True
-            db_session.add(newUser)
-            db_session.commit()
+            insertUser(os.environ.get('ADMIN_MAIL'), os.environ.get('ADMIN_PASS'), True, True)
             exit(0)
+
         else:
             print("Deben especificarse las credenciales del administrador inicial mediante las variables de entorno ADMIN_MAIL y ADMIN_PASS.")
             exit(1)
+    
     else:
-        print("La aplicación debe iniciarse por primera vez con ENV='development' y las credenciales del primer administrador especificadas en ADMIN_MAIL y ADMIN_PASS.")
-        exit(1)
+        print("Este modo de ejecución sólo debe ejecutarse durante la instalación inicial del servicio.")
+        exit(0)
+
 
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(hours=1)
 app.secret_key = config.SECRET
