@@ -11,7 +11,7 @@ function addMachine() {
                       <input class="form-control" type="text" name="ip">
                     </td>
                     <td>
-                      <input class="form-control" type="text" name="port">
+                      <input class="form-control" type="text" name="port" value=9>
                     </td>
                     <td>
                     </td>
