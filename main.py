@@ -29,16 +29,17 @@ def insertUser(mail, password, isAdmin=False, activated=False):
 users = User.query.all()
 if users == []:
     if os.environ.get('ENV') != None and os.environ.get('ENV') == "firstrun":
+
         if os.environ.get('ADMIN_MAIL') != None and os.environ.get('ADMIN_PASS') != None:
             insertUser(os.environ.get('ADMIN_MAIL'), os.environ.get('ADMIN_PASS'), True, True)
             exit(0)
         else:
             print("Deben especificarse las credenciales del administrador inicial mediante las variables de entorno ADMIN_MAIL y ADMIN_PASS.")
             exit(1)
-
+    
     else:
-        print("Este modo de ejecución sólo debe ejecutarse durante la instalación inicial del servicio.")
-        exit(0)
+        print("Antes de ejecutar la aplicación por primera vez, es necesario emplear el modo ENV=firstrun y especificar las credenciales del administrador inicial mediante las variables de entorno ADMIN_MAIL y ADMIN_PASS.")
+        exit(0)    
 
 
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(hours=1)
