@@ -12,6 +12,7 @@ except:
 def sendMail(to, subject, message):
     try:
         config
+        secrets
     except:
         return 1
 

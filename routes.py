@@ -239,21 +239,22 @@ def users():
                     newUser = User(email, password)
                     try:
                         db_session.add(newUser)
-                        db_session.commit()
-                        user = User.query.filter_by(email=request.json['email']).first()
                         mailResult = mail.sendMail(email, f"Nuevas credenciales en {config.SERVER_NAME}", mail.buildMessage('newUser', {'$PASSWORD': password, '$ADMIN_EMAIL': config.ADMIN_MAIL}))
                         if mailResult == 0:
+                            db_session.commit()
+                            user = User.query.filter_by(email=request.json['email']).first()
                             response = {
                                 'code': 0,
                                 'id': user.id
                             }
-                        elif mailResult == 1:
+                        else:
+                            user = User.query.filter_by(email=request.json['email']).first()
                             if user:
                                 db_session.delete(user)
                                 db_session.commit()
                             response = {
                             'code': 2,
-                            'message': "No se han configurado las credenciales para enviar mensajes de correo."
+                            'message': f"Ha ocurrido un error al enviar el correo electrónico. ERROR: {mailResult}"
                         }
                     except:
                         response = {
@@ -286,17 +287,17 @@ def user(userId):
                 try:
                     password = randomPass()
                     user.password = password
-                    db_session.commit()
-
+                    
                     mailResult = mail.sendMail(user.email, f"Reestablecimiento de contraseña en {config.SERVER_NAME}", mail.buildMessage('resetPassword', {'$PASSWORD': password, '$ADMIN_EMAIL': config.ADMIN_EMAIL}))
                     if mailResult == 0:
+                        db_session.commit()
                         response = {
                             'code': 0
                         }
-                    elif mailResult == 1:
+                    else:
                         response = {
-                            'code': 3,
-                            'message': "No se han configurado las credenciales para enviar mensajes de correo."
+                        'code': 3,
+                        'message': f"Ha ocurrido un error al enviar el correo electrónico. ERROR: {mailResult}"
                         }
 
                 except:
