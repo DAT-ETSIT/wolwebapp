@@ -26,9 +26,9 @@
       <h2 class="text-center" id="theTitle">{{ TITLE }}</h2><br>
       {% if isAdmin %}
         {% block admin_menu %}
-          <a href="{{ url_for('views.index')}}">Inicio</a>
-          <a href="{{ url_for('views.machines')}}">Máquinas</a>
-          <a href="{{ url_for('views.users')}}">Usuarios</a>
+          <a id="linkIndex" href="{{ url_for('views.index')}}">Inicio</a>
+          <a id="linkMachines" href="{{ url_for('views.machines')}}">Máquinas</a>
+          <a id="linkUsers" href="{{ url_for('views.users')}}">Usuarios</a>
         {% endblock %}
       {% endif %}
       {% block container %}

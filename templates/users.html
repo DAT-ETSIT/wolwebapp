@@ -2,7 +2,7 @@
 {% block faviconType %}https://www.etsit.upm.es/fileadmin/template/images/favicon.ico{% endblock %}
 
 {% block container %}
-<h2>Usuarios</h2>
+<h3>Usuarios</h2>
 <div class="borderTable align-middle">
   <table id="equipos" class="table table-striped table-hover" style="width:100%">
     <thead>
@@ -37,6 +37,8 @@
         </td>
       </tr>
       {% endfor %}
+    </tbody>
+    <tfoot>
       <tr id="add">
         <td>
         </td>
@@ -52,7 +54,7 @@
         <td>
         </td>
       </tr>
-    </tbody>
+    </tfoot>
   </table>
 </div>
 {% endblock %}

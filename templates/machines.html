@@ -2,7 +2,7 @@
 {% block faviconType %}favicon.ico{% endblock %}
 
 {% block container %}
-<h2>Máquinas</h2>
+<h3>Máquinas</h3>
 <div class="borderTable align-middle">
 
     <table id="equipos" class="table table-striped table-hover" style="width:100%">
@@ -54,6 +54,8 @@
         </tr>
         {% endfor %}
         {% endif %}
+      </tbody>
+      <tfoot>
         <tr id="add">
           <td>
           </td>
@@ -73,7 +75,7 @@
           <td>
           </td>
         </tr>
-      </tbody>
+      </tfoot>
     </table>
 </div>
 {% endblock %}

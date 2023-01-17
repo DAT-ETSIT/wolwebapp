@@ -33,6 +33,22 @@ const loadTheme = (theme) => {
     root.setAttribute('color-scheme', `${theme}`);
 }
 
+const checkSite = () => {
+    let url = window.location.pathname;
+    try{
+        if (url === '/') {
+            document.getElementById('linkIndex').style.textDecoration = "underline";
+        }
+        else if (url.includes('users')) {
+            document.getElementById('linkUsers').style.textDecoration = "underline";
+        }
+        else if (url.includes('machines')) {
+            document.getElementById('linkMachines').style.textDecoration = "underline";
+        }
+    }
+    catch {}
+}
+
 window.addEventListener('DOMContentLoaded', () => {
     loadTheme(getCurrentTheme());
 })
@@ -51,4 +67,5 @@ themeBtn.addEventListener('click', () => {
 
 window.addEventListener('DOMContentLoaded', () => {
     loadTheme(getCurrentTheme());
+    checkSite();
 })
