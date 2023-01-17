@@ -307,3 +307,7 @@ thead > tr > th {
     font-family: 'Questrial', sans-serif;
     font-weight: 200;
 }
+
+#updateAlert{
+    margin-top: 50px;
+}
