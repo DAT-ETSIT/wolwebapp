@@ -99,4 +99,3 @@ systemctl enable wolsimpleserver.service
 systemctl start wolsimpleserver.service
 echo
 echo "Instalación completada."
-systemctl status wolsimpleserver.service
