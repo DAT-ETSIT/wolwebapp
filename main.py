@@ -1,6 +1,5 @@
 from flask import Flask, request, redirect, url_for, render_template
 from flask_login import login_required, LoginManager, current_user
-from datetime import timedelta
 
 import os
 from subprocess import run, PIPE
@@ -42,7 +41,6 @@ if users == []:
         exit(0)    
 
 
-app.config['REMEMBER_COOKIE_DURATION'] = timedelta(hours=1)
 app.secret_key = config.SECRET
 app.register_blueprint(auth) 
 app.register_blueprint(views)

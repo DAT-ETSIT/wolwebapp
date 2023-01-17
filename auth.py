@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
+from datetime import timedelta
 
 from database import db_session
 from models import User
@@ -14,11 +15,11 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-        remember = request.form.get('remember') if request.form.get('remember') else False
+        remember = True if request.form.get('remember') != None else False
         user = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password, password):
-                login_user(user, remember=remember)
+                login_user(user, remember=remember, duration=timedelta(minutes=30))
                 return redirect(url_for('views.index'))
             else:
                 flash('Contraseña incorrecta.', category='error')
