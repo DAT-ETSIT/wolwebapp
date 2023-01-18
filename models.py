@@ -26,6 +26,9 @@ class User(UserMixin, Base):
     def setAdmin(self,admin):
         self.admin = admin
 
+    def setPassword(self,password):
+        self.password = generate_password_hash(password)
+
 class Machine(Base):
     __tablename__ = 'machines'
 
