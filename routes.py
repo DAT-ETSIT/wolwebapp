@@ -37,12 +37,12 @@ def password():
             return render_template('changePassword.html')
 
     try:
-        user.password = password
+        User.setPassword(user,password)
         user.activated = True
         db_session.commit()
 
         try:
-            mail.sendMail(user.email, f"Se ha actualizado tu contraseña en {config.SERVER_NAME}", mail.buildMessage('updatedPassword', {'$ADMIN_EMAIL': config.ADMIN_EMAIL}))
+            mail.sendMail(user.email, f"Se ha actualizado tu contraseña en {config.SERVER_NAME}", mail.buildMessage('updatedPassword', {'$ADMIN_MAIL': config.ADMIN_MAIL}))
         except:
             print("Error al enviar el email de confirmación de activación de la cuenta.")
         finally:
@@ -239,7 +239,7 @@ def users():
                     newUser = User(email, password)
                     try:
                         db_session.add(newUser)
-                        mailResult = mail.sendMail(email, f"Nuevas credenciales en {config.SERVER_NAME}", mail.buildMessage('newUser', {'$PASSWORD': password, '$ADMIN_EMAIL': config.ADMIN_MAIL}))
+                        mailResult = mail.sendMail(email, f"Nuevas credenciales en {config.SERVER_NAME}", mail.buildMessage('newUser', {'$PASSWORD': password, '$ADMIN_MAIL': config.ADMIN_MAIL}))
                         if mailResult == 0:
                             db_session.commit()
                             user = User.query.filter_by(email=request.json['email']).first()
@@ -286,9 +286,9 @@ def user(userId):
             if user:
                 try:
                     password = randomPass()
-                    user.password = password
-                    
-                    mailResult = mail.sendMail(user.email, f"Reestablecimiento de contraseña en {config.SERVER_NAME}", mail.buildMessage('resetPassword', {'$PASSWORD': password, '$ADMIN_EMAIL': config.ADMIN_EMAIL}))
+                    User.setPassword(user,password)
+                    user.activated = False
+                    mailResult = mail.sendMail(user.email, f"Reestablecimiento de contraseña en {config.SERVER_NAME}", mail.buildMessage('resetPassword', {'$PASSWORD': password, '$ADMIN_MAIL': config.ADMIN_MAIL}))
                     if mailResult == 0:
                         db_session.commit()
                         response = {
