@@ -61,7 +61,7 @@ def user_machines(user_id):
             user_email = User.query.get(user_id).email
             owned_machines = []
             for machine in ownerships:
-                owned_machines.append(machine.id)
+                owned_machines.append(machine.machine_id)
             return render_template('ownership.html', user_email=user_email, machines=machines, owned_machines=owned_machines, TITLE=config.TITLE, isAdmin=current_user.admin)
     else:
         abort(403)

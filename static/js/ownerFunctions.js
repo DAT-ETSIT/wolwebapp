@@ -1,8 +1,6 @@
 function editOwner(buttonClicked, isOwned){
     checkbox = buttonClicked.parent()
     row = buttonClicked.parent().parent().parent()
-    console.log(checkbox)
-    console.log(row)
     const url = window.location.pathname
     $.ajax({
         method: isOwned ? 'DELETE' : 'PUT',
