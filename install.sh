@@ -5,6 +5,8 @@ if [ "$EUID" -ne 0 ]
 	exit
 fi
 
+SEPARATOR="------------------"
+
 BIND_ADDRESS='0.0.0.0'
 PORT='3000'
 PARENT_PATH='/srv'
@@ -50,6 +52,9 @@ git clone https://github.com/Pablofl01/wolsimpleserver
 cd $WORKING_PATH
 
 if [[ $CERT_PATH == '' ]] || [[ $KEY_PATH == '' ]]; then
+    echo $SEPARATOR
+    echo "A continuación se solicitarán los datos para generar un certificado SSL autofirmado:"
+    echo
     openssl req -x509 -newkey rsa:4096 -nodes -out $WORKING_PATH/data/cert.pem -keyout $WORKING_PATH/data/key.pem
     CERT_PATH="$WORKING_PATH/data/cert.pem"
     KEY_PATH="$WORKING_PATH/data/key.pem"
@@ -59,6 +64,7 @@ echo
 echo "Creando entorno virutal de pyhton."
 python3 -m venv /srv/wolsimpleserver
 
+echo
 echo "Instalando librerías."
 $WORKING_PATH/bin/pip3 install -r $WORKING_PATH/requirements.txt
 
@@ -82,7 +88,7 @@ done
 
 SECRET=$(openssl rand -hex 20)
 
-sed -e "s/<SERVER_NAME>/'$SERVER_NAME'/g; s/<ADMIN_EMAIL>/$ADMIN_EMAIL/g; s/<SECRET>/$SECRET/g;" $WORKING_PATH/data/serverConfigExample.py > $WORKING_PATH/data/serverConfig.py
+sed -e "s/<SERVER_NAME>/$SERVER_NAME/g; s/<ADMIN_EMAIL>/$ADMIN_EMAIL/g; s/<SECRET>/$SECRET/g;" $WORKING_PATH/data/serverConfigExample.py > $WORKING_PATH/data/serverConfig.py
 echo
 echo "Configurando envío de mensajes por correo electrónico."
 chmod +x $WORKING_PATH/configure_email.sh
