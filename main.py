@@ -60,6 +60,11 @@ def shutdown_session(exception=None):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+@app.before_request
+def before_request():
+    if request.url.startswith('http://'):
+        url = request.url.replace('http://', 'https://', 1)
+        return redirect(url, code=301)
 
 @app.route('/wol/<int:machineId>', methods=['POST'])
 @login_required
