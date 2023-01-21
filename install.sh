@@ -98,7 +98,7 @@ ENV='firstrun' ADMIN_MAIL=$ADMIN_MAIL ADMIN_PASS=$ADMIN_PASS $WORKING_PATH/bin/p
 
 echo
 echo "Configurando servicio."
-sed -e "s/<WORKING_PATH>/${WORKING_PATH//\//\\/}/g; s/<CERT_PATH>/${CERT_PATH//\//\\/}/g; s/<KEY_PATH>/${KEY_PATH//\//\\/}/g; s/<BIND_ADDRESS>/$BIND_ADDRESS/g; s/<PORT>/$PORT/g; " $WORKING_PATH/wolsimpleserverExample.service > /etc/systemd/system/wolsimpleserver.service
+sed -e "s/<WORKING_PATH>/${WORKING_PATH//\//\\/}/g; s/<CERT_PATH>/${CERT_PATH//\//\\/}/g; s/<KEY_PATH>/${KEY_PATH//\//\\/}/g; s/<BIND_ADDRESS>/$BIND_ADDRESS/g;" $WORKING_PATH/wolsimpleserverExample.service > /etc/systemd/system/wolsimpleserver.service
 echo
 echo "Iniciando servicio."
 systemctl enable wolsimpleserver.service
