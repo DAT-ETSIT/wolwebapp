@@ -1,0 +1,6 @@
+[Unit]
+Description=WOL Simple Server
+Requires=wolsimpleserver_main.service wolsimpleserver_proxy.service
+
+[Install]
+WantedBy=multi-user.target

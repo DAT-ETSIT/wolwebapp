@@ -11,6 +11,7 @@ BIND_ADDRESS='0.0.0.0'
 PORT='3000'
 PARENT_PATH='/srv'
 WORKING_PATH='/srv/wolsimpleserver'
+SERVER_MODE='standalone'
 CERT_PATH=''
 KEY_PATH=''
 
@@ -22,6 +23,7 @@ do
         p)  PORT=$OPTARG  ;;
         w)  PARENT_PATH=${OPTARG%'/'}
             WORKING_PATH="$PARENT_PATH/wolsimpleserver"  ;;
+        m)  SERVER_MODE=$OPTARG ;;
         c)  CERT_PATH=$OPTARG  ;;
         k)  KEY_PATH=$OPTARG  ;;
         \?) echo "Opción no válida -$OPTARG." 
@@ -98,10 +100,23 @@ ENV='firstrun' ADMIN_MAIL=$ADMIN_MAIL ADMIN_PASS=$ADMIN_PASS $WORKING_PATH/bin/p
 
 echo
 echo "Configurando servicio."
-sed -e "s/<WORKING_PATH>/${WORKING_PATH//\//\\/}/g; s/<CERT_PATH>/${CERT_PATH//\//\\/}/g; s/<KEY_PATH>/${KEY_PATH//\//\\/}/g; s/<BIND_ADDRESS>/$BIND_ADDRESS/g;" $WORKING_PATH/wolsimpleserverExample.service > /etc/systemd/system/wolsimpleserver.service
-echo
-echo "Iniciando servicio."
-systemctl enable wolsimpleserver.service
-systemctl start wolsimpleserver.service
+
+
+if [[ $SERVER_MODE == 'standalone' ]]; then
+    sed -e "s/<WORKING_PATH>/${WORKING_PATH//\//\\/}/g; s/<IS_CERT>/--certfile/g; s/<CERT_PATH>/${CERT_PATH//\//\\/}/g; s/<IS_KEY>/--keyfile/g; s/<KEY_PATH>/${KEY_PATH//\//\\/}/g; s/<BIND_ADDRESS>/$BIND_ADDRESS/g; s/<PORT>/443/g; s/<APP>/wsgi/g;" $WORKING_PATH/services/wolsimpleserver_part.service > /etc/systemd/system/wolsimpleserver_main.service
+
+    sed -e "s/<WORKING_PATH>/${WORKING_PATH//\//\\/}/g; s/<IS_CERT>//g; s/<CERT_PATH>//g; s/<IS_KEY>//g; s/<KEY_PATH>//g; s/<BIND_ADDRESS>/$BIND_ADDRESS/g; s/<PORT>/80/g; s/<APP>/redirect/g;" $WORKING_PATH/services/wolsimpleserver_part.service > /etc/systemd/system/wolsimpleserver_proxy.service
+
+    cp $WORKING_PATH/services/wolsimpleserver.target /etc/systemd/system/wolsimpleserver.target
+
+    systemctl enable wolsimpleserver.target
+    systemctl start wolsimpleserver.targets
+else
+    sed -e "s/<WORKING_PATH>/${WORKING_PATH//\//\\/}/g; s/<IS_CERT>//g; s/<CERT_PATH>//g; s/<IS_KEY>//g; s/<KEY_PATH>//g; s/<BIND_ADDRESS>/$BIND_ADDRESS/g; s/<PORT>/$PORT/g; s/<APP>/main/g;" $WORKING_PATH/services/wolsimpleserver.service > /etc/systemd/system/wolsimpleserver.service
+
+    systemctl enable wolsimpleserver.service
+    systemctl start wolsimpleserver.service
+fi
+
 echo
 echo "Instalación completada."

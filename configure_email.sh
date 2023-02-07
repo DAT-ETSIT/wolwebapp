@@ -51,8 +51,8 @@ do
     fi
 done
 
-sed -e "s/<ADMIN_MAIL>/$MAIL_USER/g; s/<MAIL_NAME>/$MAIL_NAME/g; s/<MAIL_SERVER>/$MAIL_SERVER/g; s/<MAIL_PORT>/$MAIL_PORT/g" -i $SCRIPT_DIR/data/serverConfig.py
-sed -e "s/<MAIL_USER>/$MAIL_USER/g; s/<MAIL_PASS>/$MAIL_PASS/g" $SCRIPT_DIR/data/secretsExample.py > $SCRIPT_DIR/data/secrets.py
+sed -e "s/<MAIL_USER>/$MAIL_USER/g; s/<MAIL_NAME>/$MAIL_NAME/g; s/<MAIL_SERVER>/$MAIL_SERVER/g; s/<MAIL_PORT>/$MAIL_PORT/g" -i $SCRIPT_DIR/data/serverConfig.py
+sed -e "s/<MAIL_PASS>/$MAIL_PASS/g" $SCRIPT_DIR/data/secretsExample.py > $SCRIPT_DIR/data/secrets.py
 cd $SCRIPT_DIR/data
 $SCRIPT_DIR/bin/python3 ./compile.py build_ext --inplace
 rm $SCRIPT_DIR/data/secrets.py
