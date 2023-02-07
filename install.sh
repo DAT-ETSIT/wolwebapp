@@ -10,7 +10,7 @@ SEPARATOR="------------------"
 BIND_ADDRESS='0.0.0.0'
 PORT='3000'
 PARENT_PATH='/srv'
-WORKING_PATH='/srv/wolsimpleserver'
+WORKING_PATH="$PARENT_PATH/wolsimpleserver"
 SERVER_MODE='standalone'
 CERT_PATH=''
 KEY_PATH=''
@@ -64,7 +64,7 @@ fi
 
 echo
 echo "Creando entorno virutal de pyhton."
-python3 -m venv /srv/wolsimpleserver
+python3 -m venv $WORKING_PATH
 
 echo
 echo "Instalando librerías."
