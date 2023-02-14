@@ -37,7 +37,7 @@ Los argumentos que pueden utilizarse a la hora de instalar
 -p   PORT - Puerto empleado por la aplicación. Si se inicia en modo 'standalone' se emplean 80 y 443 por defecto, si se configura para emplear junto con un proxy inverso, se emplea el 3000.
 -w   PARENT_PATH - Directorio donde se instalará la aplicación (por     
                    defecto /srv).
--m   SERVER_MODE - STANDALONE o REVERSE_PROXY.
+-m   SERVER_MODE - Si se especifica 'standalone', se instalará el servicio en los puertos 80 y 443 y se empleará el certificado SSL indicado. Si no es especifica o el valor es distinto, el servidor tan solo estará disponble en el puerto especificado y solo en modo http.
 -c   CERT_PATH - Ruta del certificado SSL.
 -k   KEY_PATH - Clave del certificado SSL.
 ```
