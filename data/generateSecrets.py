@@ -7,7 +7,7 @@ key = Fernet.generate_key()
 cipher = Fernet(key)
 cryptedPass = cipher.encrypt(os.environ.get('MAIL_PASS').encode())
 
-with open('/root/.wolsimpleserverkey', 'wb') as f:
+with open('/root/.wolwebappkey', 'wb') as f:
     f.write(key)
 
 with open(f"{scriptPath}/secrets", 'wb') as f:

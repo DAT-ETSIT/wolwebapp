@@ -13,7 +13,7 @@ except:
 def getSecrets():
     scriptPath = os.path.realpath(os.path.dirname(__file__))
 
-    with open('/root/.wolsimpleserverkey', 'rb') as f:
+    with open('/root/.wolwebappkey', 'rb') as f:
         key = f.read()
     cipher = Fernet(key)
 

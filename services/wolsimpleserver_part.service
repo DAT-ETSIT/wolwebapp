@@ -1,6 +1,6 @@
 [Unit]
 Description=Simple Flask based web server to manage Wake on LAN
-PartOf=wolsimpleserver.target
+PartOf=wolwebapp.target
 
 [Service]
 User=root

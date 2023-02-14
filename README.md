@@ -1,4 +1,4 @@
-# Wolsimpleserver
+# wolwebapp
 
 Wolsimlpeserver es un aplicación que posibilita el encendido remoto de ordenadores en remoto, monitorizar el estado de los mismos y la gestión de usuarios y sus permisos, todo ello desde un interfaz web. 
 <!-- El objetivo es desplegar el servicio en un equipo de bajo consumo que estará conectado para así reducir las horas que están los ordenadores encendidos. -->
@@ -8,7 +8,7 @@ Wolsimlpeserver es un aplicación que posibilita el encendido remoto de ordenado
 Para configurar la instalación del servicio tan solo es necesario descargar el fichero `install.sh` y ejecutarlo en una shell de Linux, siguiendo estos pasos:
 
 ```bash
-wget https://raw.githubusercontent.com/pablofl01/wolsimpleserver/main/install.sh
+wget https://raw.githubusercontent.com/DAT-ETSIT/wolwebapp/main/install.sh
 chmod +x install.sh
 sudo ./install.sh
 ```
@@ -17,7 +17,7 @@ A continuación se detalla el funcionamiento del mismo:
 
 Comprueba que estén instaladas las dependencias necesarias y en caso de que haya alguna que no, la instala. Las dependencias necesarias son: `git python3 python3-pip python3-venv openssl wakeonlan`.
 
-Una vez instaladas las dependencias, clona el repositorio [wolsimpleserver](https://github.com/Pablofl01/wolsimpleserver) y cambia el directorio de trabajo al generado con la clonación.
+Una vez instaladas las dependencias, clona el repositorio [wolwebapp](https://github.com/DAT-ETSIT/wolwebapp) y cambia el directorio de trabajo al generado con la clonación.
 
 En caso de no proporcionar un certificado propio (ver apartado [Argumentos](#argumentos)), el terminal solicitará algunos parámetros para generarlo de forma automática.
 
