@@ -110,7 +110,7 @@ if [[ $SERVER_MODE == 'standalone' ]]; then
     cp $WORKING_PATH/services/wolsimpleserver.target /etc/systemd/system/wolsimpleserver.target
 
     systemctl enable wolsimpleserver.target
-    systemctl start wolsimpleserver.targets
+    systemctl start wolsimpleserver.target
 else
     sed -e "s/<WORKING_PATH>/${WORKING_PATH//\//\\/}/g; s/<IS_CERT>//g; s/<CERT_PATH>//g; s/<IS_KEY>//g; s/<KEY_PATH>//g; s/<BIND_ADDRESS>/$BIND_ADDRESS/g; s/<PORT>/$PORT/g; s/<APP>/main/g;" $WORKING_PATH/services/wolsimpleserver.service > /etc/systemd/system/wolsimpleserver.service
 

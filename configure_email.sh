@@ -36,8 +36,8 @@ getData
 while [ true ]
 do
     echo "------------------"
-    echo "Nombre: $MAIL_USER"
-    echo "Usuario: $MAIL_NAME"
+    echo "Nombre: $MAIL_NAME"
+    echo "Usuario: $MAIL_USER"
     echo "Servidor: $MAIL_SERVER"
     echo "Puerto: $MAIL_PORT"
     read -r -p "¿Son correctos estos datos? (S/N) " response
@@ -52,9 +52,4 @@ do
 done
 
 sed -e "s/<MAIL_USER>/$MAIL_USER/g; s/<MAIL_NAME>/$MAIL_NAME/g; s/<MAIL_SERVER>/$MAIL_SERVER/g; s/<MAIL_PORT>/$MAIL_PORT/g" -i $SCRIPT_DIR/data/serverConfig.py
-sed -e "s/<MAIL_PASS>/$MAIL_PASS/g" $SCRIPT_DIR/data/secretsExample.py > $SCRIPT_DIR/data/secrets.py
-cd $SCRIPT_DIR/data
-$SCRIPT_DIR/bin/python3 ./compile.py build_ext --inplace
-rm $SCRIPT_DIR/data/secrets.py
-rm $SCRIPT_DIR/data/secrets.c
-rm -rf rm $SCRIPT_DIR/data/build
+$WORKING_PATH/bin/python3 $SCRIPT_DIR/generateSecrets.py
