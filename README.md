@@ -1,6 +1,6 @@
 # wolwebapp
 
-Wolsimlpeserver es un aplicación que posibilita el encendido remoto de ordenadores, monitorizar el estado de los mismos y la gestión de usuarios y sus permisos, todo ello desde un interfaz web. 
+Wolwebapp es un aplicación que posibilita el encendido remoto de ordenadores, monitorizar el estado de los mismos y la gestión de usuarios y sus permisos, todo ello desde un interfaz web. 
 <!-- El objetivo es desplegar el servicio en un equipo de bajo consumo que estará conectado para así reducir las horas que están los ordenadores encendidos. -->
 
 ## Instalación del servicio
