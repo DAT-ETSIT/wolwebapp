@@ -63,7 +63,7 @@ if [[ $CERT_PATH == '' ]] || [[ $KEY_PATH == '' ]]; then
 fi
 
 echo
-echo "Creando entorno virutal de python."
+echo "Creando entorno virtual de python."
 python3 -m venv $WORKING_PATH
 
 echo
