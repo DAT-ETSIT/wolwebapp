@@ -52,4 +52,4 @@ do
 done
 
 sed -e "s/<MAIL_USER>/$MAIL_USER/g; s/<MAIL_NAME>/$MAIL_NAME/g; s/<MAIL_SERVER>/$MAIL_SERVER/g; s/<MAIL_PORT>/$MAIL_PORT/g" -i $SCRIPT_DIR/data/serverConfig.py
-$WORKING_PATH/bin/python3 $SCRIPT_DIR/generateSecrets.py
+$WORKING_PATH/bin/python3 $SCRIPT_DIR/data/generateSecrets.py
