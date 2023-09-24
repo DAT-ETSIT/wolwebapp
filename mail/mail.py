@@ -44,7 +44,7 @@ def sendMail(to, subject, message):
         print("Error recuperando la clave del servidor de correo.")
         return 4
 
-    msg['From'] =  f'{config.MAIL_NAME} <{mailPass}>'
+    msg['From'] =  f'{config.MAIL_NAME} <{mailUser}>'
     msg['To'] = to
     msg['Subject'] = subject
     
