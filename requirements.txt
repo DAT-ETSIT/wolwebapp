@@ -4,3 +4,5 @@ Flask-SQLAlchemy
 flask_login
 gunicorn
 Cython
+Fernet
+cryptography

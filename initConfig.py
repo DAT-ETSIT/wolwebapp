@@ -5,7 +5,7 @@ import json
 import os
 import argparse
 
-parser = argparse.ArgumentParser(description='Script para añadir usuarios, máquinas o propiedades a wolsimpleserver.')
+parser = argparse.ArgumentParser(description='Script para añadir usuarios, máquinas o propiedades a wolwebapp.')
 
 parser.add_argument('--machines')
 parser.add_argument('--users')

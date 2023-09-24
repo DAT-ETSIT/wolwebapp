@@ -10,7 +10,8 @@ SEPARATOR="------------------"
 BIND_ADDRESS='0.0.0.0'
 PORT='3000'
 PARENT_PATH='/srv'
-WORKING_PATH='/srv/wolsimpleserver'
+WORKING_PATH="$PARENT_PATH/wolwebapp"
+SERVER_MODE='standalone'
 CERT_PATH=''
 KEY_PATH=''
 
@@ -21,7 +22,8 @@ do
         b)  BIND_ADDRESS=$OPTARG   ;;
         p)  PORT=$OPTARG  ;;
         w)  PARENT_PATH=${OPTARG%'/'}
-            WORKING_PATH="$PARENT_PATH/wolsimpleserver"  ;;
+            WORKING_PATH="$PARENT_PATH/wolwebapp"  ;;
+        m)  SERVER_MODE=$OPTARG ;;
         c)  CERT_PATH=$OPTARG  ;;
         k)  KEY_PATH=$OPTARG  ;;
         \?) echo "Opción no válida -$OPTARG." 
@@ -48,7 +50,7 @@ for check in git ethtool python3 python3-pip python3-venv openssl wakeonlan
 
 mkdir -p $PARENT_PATH
 cd $PARENT_PATH
-git clone https://github.com/Pablofl01/wolsimpleserver
+git clone https://github.com/DAT-ETSIT/wolwebapp
 cd $WORKING_PATH
 
 if [[ $CERT_PATH == '' ]] || [[ $KEY_PATH == '' ]]; then
@@ -61,8 +63,8 @@ if [[ $CERT_PATH == '' ]] || [[ $KEY_PATH == '' ]]; then
 fi
 
 echo
-echo "Creando entorno virutal de pyhton."
-python3 -m venv /srv/wolsimpleserver
+echo "Creando entorno virtual de python."
+python3 -m venv $WORKING_PATH
 
 echo
 echo "Instalando librerías."
@@ -98,10 +100,23 @@ ENV='firstrun' ADMIN_MAIL=$ADMIN_MAIL ADMIN_PASS=$ADMIN_PASS $WORKING_PATH/bin/p
 
 echo
 echo "Configurando servicio."
-sed -e "s/<WORKING_PATH>/${WORKING_PATH//\//\\/}/g; s/<CERT_PATH>/${CERT_PATH//\//\\/}/g; s/<KEY_PATH>/${KEY_PATH//\//\\/}/g; s/<BIND_ADDRESS>/$BIND_ADDRESS/g;" $WORKING_PATH/wolsimpleserverExample.service > /etc/systemd/system/wolsimpleserver.service
-echo
-echo "Iniciando servicio."
-systemctl enable wolsimpleserver.service
-systemctl start wolsimpleserver.service
+
+
+if [[ $SERVER_MODE == 'standalone' ]]; then
+    sed -e "s/<WORKING_PATH>/${WORKING_PATH//\//\\/}/g; s/<IS_CERT>/--certfile/g; s/<CERT_PATH>/${CERT_PATH//\//\\/}/g; s/<IS_KEY>/--keyfile/g; s/<KEY_PATH>/${KEY_PATH//\//\\/}/g; s/<BIND_ADDRESS>/$BIND_ADDRESS/g; s/<PORT>/443/g; s/<APP>/wsgi/g;" $WORKING_PATH/services/wolwebapp_part.service > /etc/systemd/system/wolwebapp_main.service
+
+    sed -e "s/<WORKING_PATH>/${WORKING_PATH//\//\\/}/g; s/<IS_CERT>//g; s/<CERT_PATH>//g; s/<IS_KEY>//g; s/<KEY_PATH>//g; s/<BIND_ADDRESS>/$BIND_ADDRESS/g; s/<PORT>/80/g; s/<APP>/redirect/g;" $WORKING_PATH/services/wolwebapp_part.service > /etc/systemd/system/wolwebapp_proxy.service
+
+    cp $WORKING_PATH/services/wolwebapp.target /etc/systemd/system/wolwebapp.target
+
+    systemctl enable wolwebapp.target
+    systemctl start wolwebapp.target
+else
+    sed -e "s/<WORKING_PATH>/${WORKING_PATH//\//\\/}/g; s/<IS_CERT>//g; s/<CERT_PATH>//g; s/<IS_KEY>//g; s/<KEY_PATH>//g; s/<BIND_ADDRESS>/$BIND_ADDRESS/g; s/<PORT>/$PORT/g; s/<APP>/main/g;" $WORKING_PATH/services/wolwebapp.service > /etc/systemd/system/wolwebapp.service
+
+    systemctl enable wolwebapp.service
+    systemctl start wolwebapp.service
+fi
+
 echo
 echo "Instalación completada."

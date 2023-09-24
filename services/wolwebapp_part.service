@@ -1,0 +1,11 @@
+[Unit]
+Description=Simple Flask based web server to manage Wake on LAN
+PartOf=wolwebapp.target
+
+[Service]
+User=root
+WorkingDirectory=<WORKING_PATH>
+ExecStart=<WORKING_PATH>/bin/gunicorn <IS_CERT> <CERT_PATH> <IS_KEY> <KEY_PATH> --bind <BIND_ADDRESS>:<PORT> <APP>:app
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=always
