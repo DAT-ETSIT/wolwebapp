@@ -7,7 +7,7 @@ import data.serverConfig as config
 views = Blueprint('views', __name__)
 
 def currentVersion():
-    with open('./.git/refs/heads/main') as version:
+    with open('./.git/refs/heads/Caronte') as version:
         return str(version.read()).strip()
 
 @views.route('/', methods=['GET'])

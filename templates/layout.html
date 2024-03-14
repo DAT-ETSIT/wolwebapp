@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico')}}"
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png')}}"
       type="image/x-icon" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
@@ -23,12 +23,13 @@
   <body>
     <button class="theme" role="switch" aria-label="Cambiar tema"></button>
     <div class="container" style="position: relative;">
-      <h2 class="text-center" id="theTitle">{{ TITLE }}</h2><br>
+    <div id="logoCaronte" ></div>
       {% if isAdmin %}
         {% block admin_menu %}
           <a id="linkIndex" href="{{ url_for('views.index')}}">Inicio</a>
           <a id="linkMachines" href="{{ url_for('views.machines')}}">Máquinas</a>
           <a id="linkUsers" href="{{ url_for('views.users')}}">Usuarios</a>
+          <br><br>
         {% endblock %}
       {% endif %}
       {% block container %}
@@ -50,7 +51,9 @@
     </ul>
     {% endif %}
   {% endwith %}
-      
+  
+  
+
   </body>
   {% block scripts %}
   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
