@@ -2,27 +2,11 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
 import os
-from cryptography.fernet import Fernet
-
 
 try:
     import data.serverConfig as config
 except:
     print("No se ha definido un fichero de configuración para el envío de correo.")
-
-def getSecrets():
-    scriptPath = os.path.realpath(os.path.dirname(__file__))
-
-    with open('/root/.wolwebappkey', 'rb') as f:
-        key = f.read()
-    cipher = Fernet(key)
-
-    with open(f"{scriptPath}/secrets", 'rb') as f:
-        cryptedPass = f.read()
-
-    mailPass = cipher.decrypt(cryptedPass).decode()
-
-    return mailPass
 
 def sendMail(to, subject, message):
     try:
@@ -33,18 +17,10 @@ def sendMail(to, subject, message):
     if (message is None):
         print("No se ha definido un mensaje.")
         return 2
-
-    mailUser, mailPass = getSecrets()
-
+    
     msg = MIMEMultipart()
 
-    try:
-        mailPass = getSecrets()
-    except:
-        print("Error recuperando la clave del servidor de correo.")
-        return 4
-
-    msg['From'] =  f'{config.MAIL_NAME} <{mailUser}>'
+    msg['From'] =  f'{config.MAIL_NAME} <{config.MAIL_PASS}>'
     msg['To'] = to
     msg['Subject'] = subject
     
@@ -53,7 +29,7 @@ def sendMail(to, subject, message):
     server = smtplib.SMTP(f'{config.MAIL_SERVER}:{config.MAIL_PORT}')
     server.starttls()
     try:
-        server.login(mailUser, mailPass)
+        server.login(config.MAIL_USER, config.MAIL_PASS)
     except:
         print("Error al iniciar sesión en el servidor.")
         return 3

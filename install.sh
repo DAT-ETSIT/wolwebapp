@@ -15,7 +15,7 @@ SERVER_MODE='standalone'
 CERT_PATH=''
 KEY_PATH=''
 
-while getopts ":p:b:w:c:k: h" opt
+while getopts ":b:p:w:m:c:k: h" opt
 do
     case $opt in
         h)  echo "Mostrar ayuda" ;;
